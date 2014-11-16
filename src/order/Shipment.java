@@ -11,12 +11,12 @@ import map.City;
  *
  * @author Piotrek
  */
-public class Shipping {
+public class Shipment {
     private String name;
     private City whereTo;
     private int priority;
     
-    public Shipping(String name, City whereTo, int priority) {
+    public Shipment(String name, City whereTo, int priority) {
         this.name = name;
         this.whereTo = whereTo;
         this.priority = priority;
