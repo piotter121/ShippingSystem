@@ -13,8 +13,6 @@ public interface Queue<V> {
 
     boolean isEmpty();
 
-    V front();
-
     void push(V value);
 
     V pop();
