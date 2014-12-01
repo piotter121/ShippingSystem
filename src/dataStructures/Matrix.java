@@ -5,8 +5,6 @@
  */
 package dataStructures;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Piotrek
