@@ -20,6 +20,7 @@ public class Map {
 
     public Map(City... c) {
         cities = new ArrayList<>(Arrays.asList(c));
+        connections = new Matrix<>(cities.size(), cities.size());
     }
 
     public void setConnection(City a, City b, int value) {
@@ -33,5 +34,16 @@ public class Map {
         int i = cities.indexOf(a);
         int j = cities.indexOf(b);
         return connections.get(i, j);
+    }
+    
+    public void addCity(City c) {
+        cities.add(c);
+        Matrix<Integer> newConnections = new Matrix<>(cities.size(), cities.size());
+        for (int i = 0; i < newConnections.getRows(); i++) {
+            for (int j = 0; j < newConnections.getCols(); j++) {
+                newConnections.set(i, j, connections.get(i, j));
+            }
+        }
+        connections = newConnections;
     }
 }
