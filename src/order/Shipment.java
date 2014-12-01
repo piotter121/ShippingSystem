@@ -11,7 +11,7 @@ import map.City;
  *
  * @author Piotrek
  */
-public class Shipment {
+public class Shipment implements Comparable<Shipment> {
     private String name;
     private City whereTo;
     private int priority;
@@ -32,5 +32,10 @@ public class Shipment {
     
     public int getPriority() {
         return priority;
+    }
+
+    @Override
+    public int compareTo(Shipment o) {
+        return this.priority - o.priority;
     }
 }

@@ -10,5 +10,20 @@ package map;
  * @author Piotrek
  */
 public class City {
-    
+
+    private final String name;
+
+    public City(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        City c = (City) o;
+        return this.name == c.name;
+    }
 }
