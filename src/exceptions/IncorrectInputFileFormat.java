@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dataStructures;
+package exceptions;
 
 /**
  *
  * @author Piotrek
  */
-public interface Queue<V extends Comparable<V>> {
-
-    void push(V value);
-
-    V pop();
+public class IncorrectInputFileFormat extends Exception{
+    
 }
