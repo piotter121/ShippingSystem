@@ -18,8 +18,13 @@ public class Matrix<T> {
     private int cols;
 
     public Matrix(int m, int n) {
-        rows = m;
-        cols = n;
+        if (m > 0 && n > 0) {
+            rows = m;
+            cols = n;
+        } else {
+            rows = 0;
+            cols = 0;
+        }
         matrix = new Object[rows * cols];
     }
 
@@ -47,5 +52,13 @@ public class Matrix<T> {
             result += '\n';
         }
         return result;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
     }
 }

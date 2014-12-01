@@ -5,10 +5,14 @@
  */
 package map;
 
+import dataStructures.Matrix;
+import java.util.ArrayList;
+
 /**
  *
  * @author Piotrek
  */
 public class Map {
-    
+    Matrix<Integer> matrix;
+    ArrayList<City> cities;    
 }
