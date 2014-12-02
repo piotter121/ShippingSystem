@@ -24,6 +24,15 @@ public class Stack<T> {
     }
 
     public T pop() {
-        return stack.remove(stack.size());
+        return stack.remove(stack.size() - 1);
+    }
+    
+    @Override
+    public String toString() {
+        String result = new String();
+        for (T i : stack) {
+            result += i.toString() + '\n';
+        }
+        return result;
     }
 }

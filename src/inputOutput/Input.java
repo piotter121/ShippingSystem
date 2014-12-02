@@ -6,8 +6,6 @@
 package inputOutput;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import map.City;
 import map.Map;
@@ -32,27 +30,23 @@ public class Input {
 
     public Map returnMap() throws IOException {
         Scanner reader = new Scanner(mapFile);
-        Map map = null;
-        ArrayList<City> cities;
-        String buffer = reader.nextLine();
-        String splited[] = buffer.split("//s+");
-        if (splited[0].equals("#")) {
-            if (splited[1].equals("miasta")) {
-                cities = makeCities(reader);
-                map = new Map((City[]) cities.toArray());
-            } else if (splited[1].equals("połączenia")) {
-                makeConnections(reader, map);
+        Map map = new Map();
+        String buffer;
+        String splited[];
+        while (reader.hasNext()) {
+            buffer = reader.nextLine();
+            splited = buffer.split("\\s+");
+            if (splited[0].equals("#")) {
+                continue;
+            }
+            if (splited.length == 2) {
+                map.addCity(new City(Integer.parseInt(splited[0]), splited[1]));
+            } else if (splited.length == 3) {
+                map.setConnection(Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
+                        Integer.parseInt(splited[2]));
             }
         }
 
         return map;
-    }
-
-    private ArrayList<City> makeCities(Scanner reader) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void makeConnections(Scanner reader, Map map) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -27,13 +27,13 @@ public class Matrix<T> {
     }
 
     public void set(int m, int n, T value) {
-        if (m < rows && n < cols) {
+        if (m >= 0 && m < rows && n >= 0 && n < cols) {
             matrix[m * cols + n] = value;
         }
     }
 
     public T get(int m, int n) {
-        if (m < rows && n < cols) {
+        if (m >= 0 && m < rows && n >= 0 && n < cols) {
             return (T) matrix[m * cols + n];
         } else {
             return null;
@@ -45,7 +45,13 @@ public class Matrix<T> {
         String result = new String();
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                result += get(i, j).toString() + ' ';
+                T get = get(i, j);
+                if (get != null) {
+                    result += get.toString() + ' ';
+                }
+                else {
+                    result += "null ";
+                }
             }
             result += '\n';
         }
