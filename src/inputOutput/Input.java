@@ -64,8 +64,8 @@ public class Input {
         while (reader.hasNext()) {
             splited = reader.nextLine().split("\\s+");
             try {
-                list.add(new Shipment(Integer.parseInt(splited[0]), Integer.parseInt(splited[1]), 
-                Integer.parseInt(splited[2]), getShipmentName(splited), Integer.parseInt(splited[splited.length - 1])));
+                list.add(new Shipment(Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
+                        Integer.parseInt(splited[2]), getShipmentName(splited), Integer.parseInt(splited[splited.length - 1])));
             } catch (NumberFormatException e) {
                 System.out.print("Nie prawidłowa linia :");
                 for (String s : splited) {
@@ -93,11 +93,15 @@ public class Input {
             if (splited[0].equals("#")) {
                 continue;
             }
-            if (splited.length == 2) {
-                map.addCity(new City(Integer.parseInt(splited[0]), splited[1]));
-            } else if (splited.length == 3) {
-                map.setConnection(Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
-                        Integer.parseInt(splited[2]));
+            try {
+                if (splited.length == 2) {
+                    map.addCity(new City(Integer.parseInt(splited[0]), splited[1]));
+                } else if (splited.length == 3) {
+                    map.setConnection(Integer.parseInt(splited[0]), Integer.parseInt(splited[1]),
+                            Integer.parseInt(splited[2]));
+                }
+            } catch (NumberFormatException ex) {
+                System.out.println("Pominięta linia: " + buffer);
             }
         }
 
@@ -109,7 +113,7 @@ public class Input {
         for (int i = 3; i < splited.length - 1; i++) {
             result += splited[i] + ' ';
         }
-        
+
         return result;
     }
 

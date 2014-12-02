@@ -43,13 +43,7 @@ public class Shipment implements Comparable<Shipment> {
 
     @Override
     public int compareTo(Shipment o) {
-        if (priority > o.getPriority()) {
-            return 1;
-        } else if (priority == o.getPriority()) {
-            return 0;
-        } else {
-            return -1;
-        }
+        return priority - o.getPriority();
     }
 
     @Override

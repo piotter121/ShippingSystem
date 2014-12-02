@@ -48,7 +48,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
     private void heapUp() {
         int i = n;
         int p = (n - 1) / 2;
-        while (i >= 0 && get(p).compareTo(get(i)) == -1) {
+        while (i >= 0 && get(p).compareTo(get(i)) < 0) {
             swap(p, i);
             i = p;
             p = (i - 1) / 2;
@@ -66,7 +66,7 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         int i = 0;
         int c = 2 * i + 1;
         while (c < n) {
-            if (c + 1 < n && get(c + 1).compareTo(get(c)) == 1) {
+            if (c + 1 < n && get(c + 1).compareTo(get(c)) > 0) {
                 c++;
             }
             if (get(c).compareTo(get(i)) <= 0) {

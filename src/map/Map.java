@@ -27,12 +27,11 @@ public class Map {
     public Map() {
         connections = new Matrix<>(0, 0);
         cities = new ArrayList<>();
-        initDiag();
     }
 
     private void initDiag() {
         for (int i = 0; i < cities.size(); i++) {
-            setConnection(i, i, new Integer(0));
+            setConnection(cities.get(i).getId(), cities.get(i).getId(), new Integer(0));
         }
     }
 
@@ -76,6 +75,7 @@ public class Map {
             }
         }
         connections = newConnections;
+        initDiag();
     }
 
     @Override
