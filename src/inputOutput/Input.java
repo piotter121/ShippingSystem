@@ -5,10 +5,12 @@
  */
 package inputOutput;
 
+import exceptions.IncorrectFileFormatException;
 import java.io.*;
 import java.util.Scanner;
 import map.City;
 import map.Map;
+import order.Shipment;
 import order.ShipmentsList;
 
 /**
@@ -22,6 +24,7 @@ public class Input {
     private File mapFile = null;
     private File shipmentsList = null;
     private int carsNumber = 0;
+    private int base = - 1;
 
     private Input() {
     }
@@ -41,12 +44,42 @@ public class Input {
     public void setCarsNumber(int i) {
         carsNumber = i;
     }
-    
-    public ShipmentsList returnShipmentsList() throws FileNotFoundException {
+
+    public ShipmentsList returnShipmentsList() throws FileNotFoundException, IncorrectFileFormatException {
         Scanner reader = new Scanner(shipmentsList);
-        ShipmentsList list = new ShipmentsList();        
-        
+        ShipmentsList list = new ShipmentsList();
+        String[] splited;
+        if (reader.hasNext()) {
+            splited = reader.nextLine().split("\\s+");
+            if (splited.length == 1) {
+                try {
+                    base = Integer.parseInt(splited[0]);
+                } catch (NumberFormatException e) {
+                    throw new IncorrectFileFormatException();
+                }
+            } else {
+                throw new IncorrectFileFormatException();
+            }
+        }
+        while (reader.hasNext()) {
+            splited = reader.nextLine().split("\\s+");
+            try {
+                list.add(new Shipment(Integer.parseInt(splited[0]), Integer.parseInt(splited[1]), 
+                Integer.parseInt(splited[2]), getShipmentName(splited), Integer.parseInt(splited[splited.length - 1])));
+            } catch (NumberFormatException e) {
+                System.out.print("Nie prawidłowa linia :");
+                for (String s : splited) {
+                    System.out.print(s + " ");
+                }
+                System.out.println();
+            }
+        }
+
         return list;
+    }
+
+    public int returnBase() {
+        return base;
     }
 
     public Map returnMap() throws IOException {
@@ -69,6 +102,15 @@ public class Input {
         }
 
         return map;
+    }
+
+    private String getShipmentName(String[] splited) {
+        String result = new String();
+        for (int i = 3; i < splited.length - 1; i++) {
+            result += splited[i] + ' ';
+        }
+        
+        return result;
     }
 
 }

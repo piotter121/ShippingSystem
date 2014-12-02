@@ -19,7 +19,6 @@ public class MapTest {
         m.addCity(new City(1, "Zamion"));
         m.setConnection(1, 0, 30);
         System.out.println(m.getConnection(1, 0) == 30);
-        m.setBase(0);
-        System.out.println("Baza to " + m.getCityById(m.getBase()));
+        System.out.println("Baza to " + m.getCityById(0));
     }
 }

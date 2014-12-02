@@ -5,12 +5,15 @@
  */
 package tests;
 
+import exceptions.IncorrectFileFormatException;
 import inputOutput.Input;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import map.Map;
+import order.ShipmentsList;
 
 /**
  *
@@ -28,5 +31,17 @@ public class InputTest {
         }
         
         System.out.println(m.toString());
+        
+        i.setShipmentsListFile(new File("C:\\Users\\Piotrek\\Desktop\\przesylki.txt"));
+        ShipmentsList l = new ShipmentsList();
+        try {
+            l = i.returnShipmentsList();
+        } catch (FileNotFoundException | IncorrectFileFormatException ex) {
+            Logger.getLogger(InputTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        while (!l.isEmpty()) {
+            System.out.println(l.getFromTop());
+        }
     }
 }

@@ -17,4 +17,16 @@ public class ShipmentsList {
     public ShipmentsList() {
         list = new Heap<>();
     }
+    
+    public void add(Shipment a) {
+        list.push(a);
+    }
+    
+    public Shipment getFromTop() {
+        return list.pop();
+    }
+    
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
 }

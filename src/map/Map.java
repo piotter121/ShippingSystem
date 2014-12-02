@@ -17,25 +17,22 @@ public class Map {
 
     private Matrix<Integer> connections;
     private ArrayList<City> cities;
-    private int base;
 
     public Map(City... c) {
         cities = new ArrayList<>(Arrays.asList(c));
         connections = new Matrix<>(cities.size(), cities.size());
-        base = 0;
         initDiag();
     }
 
     public Map() {
         connections = new Matrix<>(0, 0);
         cities = new ArrayList<>();
-        base = 0;
         initDiag();
     }
 
     private void initDiag() {
         for (int i = 0; i < cities.size(); i++) {
-            setConnection(i, i, 0);
+            setConnection(i, i, new Integer(0));
         }
     }
 
@@ -79,14 +76,6 @@ public class Map {
             }
         }
         connections = newConnections;
-    }
-
-    public void setBase(int n) {
-        base = n;
-    }
-
-    public int getBase() {
-        return base;
     }
 
     @Override

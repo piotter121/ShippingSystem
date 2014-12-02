@@ -45,10 +45,10 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         return tmp;
     }
 
-    public void heapUp() {
+    private void heapUp() {
         int i = n;
         int p = (n - 1) / 2;
-        while (i > 0 && get(p).compareTo(get(i)) == -1) {
+        while (i >= 0 && get(p).compareTo(get(i)) == -1) {
             swap(p, i);
             i = p;
             p = (i - 1) / 2;

@@ -6,6 +6,7 @@
 package tests;
 
 import dataStructures.Heap;
+import java.util.Random;
 
 /**
  *
@@ -15,9 +16,11 @@ public class HeapTest {
 
     public static void main(String[] args) {
         Heap<Integer> h = new Heap<>();
+        Random r = new Random();
         for (int i = 0; i < 10; i++) {
-            h.push(i);
+            h.push(r.nextInt());
         }
-        System.out.println(h);
+        for (int i = 0; i < 10; i++) 
+            System.out.println(h.pop());
     }
 }
