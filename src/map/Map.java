@@ -38,20 +38,20 @@ public class Map {
             setConnection(i, i, 0);
         }
     }
-    
+
     public void setConnection(int a, int b, int value) {
-        City i = searchById(a);
-        City j = searchById(b);
+        City i = getCityById(a);
+        City j = getCityById(b);
         if (i != null && j != null) {
             connections.set(cities.indexOf(i), cities.indexOf(j), value);
             connections.set(cities.indexOf(j), cities.indexOf(i), value);
         } else {
-            System.out.println("Nie znaleziono połączenia między miastem nr " + a +
-                    " a miastem nr " + b);
+            System.out.println("Nie znaleziono połączenia między miastem nr " + a
+                    + " a miastem nr " + b);
         }
     }
 
-    private City searchById(int i) {
+    public City getCityById(int i) {
         for (City c : cities) {
             if (c.getId() == i) {
                 return c;
@@ -60,10 +60,14 @@ public class Map {
         return null;
     }
 
-    public int getConnection(City a, City b) {
-        int i = cities.indexOf(a);
-        int j = cities.indexOf(b);
-        return connections.get(i, j);
+    public int getConnection(int a, int b) {
+        City i = getCityById(a);
+        City j = getCityById(b);
+        if (i != null && j != null) {
+            return connections.get(cities.indexOf(i), cities.indexOf(j));
+        } else {
+            return -1;
+        }
     }
 
     public void addCity(City c) {
@@ -84,7 +88,7 @@ public class Map {
     public int getBase() {
         return base;
     }
-    
+
     @Override
     public String toString() {
         String result = new String();
@@ -93,7 +97,7 @@ public class Map {
         }
 
         result += connections.toString();
-        
+
         return result;
     }
 }

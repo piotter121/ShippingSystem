@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.Scanner;
 import map.City;
 import map.Map;
+import order.ShipmentsList;
 
 /**
  *
@@ -16,9 +17,18 @@ import map.Map;
  */
 public class Input {
 
+    private final static Input instance = new Input();
+
     private File mapFile = null;
     private File shipmentsList = null;
     private int carsNumber = 0;
+
+    private Input() {
+    }
+
+    public static Input getInstance() {
+        return instance;
+    }
 
     public void setMapFile(File file) {
         mapFile = file;
@@ -26,6 +36,17 @@ public class Input {
 
     public void setShipmentsListFile(File file) {
         shipmentsList = file;
+    }
+
+    public void setCarsNumber(int i) {
+        carsNumber = i;
+    }
+    
+    public ShipmentsList returnShipmentsList() throws FileNotFoundException {
+        Scanner reader = new Scanner(shipmentsList);
+        ShipmentsList list = new ShipmentsList();        
+        
+        return list;
     }
 
     public Map returnMap() throws IOException {
@@ -49,4 +70,5 @@ public class Input {
 
         return map;
     }
+
 }

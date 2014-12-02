@@ -10,8 +10,9 @@ package map;
  * @author Piotrek
  */
 public class City {
+
     private final int id;
-    private final String name;
+    private String name;
 
     public City(int id, String name) {
         this.name = name;
@@ -21,7 +22,7 @@ public class City {
     public String getName() {
         return name;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -31,9 +32,9 @@ public class City {
         City c = (City) o;
         return id == c.getId();
     }
-    
-    @Override 
+
+    @Override
     public String toString() {
-        return id + " = " + name;
+        return id + " " + name;
     }
 }

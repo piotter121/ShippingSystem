@@ -13,10 +13,12 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
 
     private Comparable[] heap;
     private int n;
+    private int tableSize;
 
     public Heap() {
         n = 0;
-        heap = new Comparable[30];
+        tableSize = 30;
+        heap = new Comparable[tableSize];
     }
 
     public boolean isEmpty() {
@@ -28,6 +30,8 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
         heap[n] = value;
         heapUp();
         n++;
+        if (n == tableSize)
+            resize();
     }
 
     @Override
@@ -86,6 +90,15 @@ public class Heap<T extends Comparable<T>> implements Queue<T> {
             
         }
         return result;
+    }
+
+    private void resize() {
+        tableSize *= 2;
+        Comparable[] newHeap = new Comparable[tableSize];
+        for (int i = 0; i < n; i++) {
+            newHeap[i] = heap[i];
+        }
+        heap = newHeap;
     }
 
 }

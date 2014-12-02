@@ -18,7 +18,7 @@ import map.Map;
  */
 public class InputTest {
     public static void main(String[] args) {
-        Input i = new Input();
+        Input i = Input.getInstance();
         i.setMapFile(new File("C:\\Users\\Piotrek\\Desktop\\mapa.txt"));
         Map m = new Map();
         try {

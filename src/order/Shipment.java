@@ -5,28 +5,34 @@
  */
 package order;
 
-import map.City;
-
 /**
  *
  * @author Piotrek
  */
 public class Shipment implements Comparable<Shipment> {
+    private final int id;
     private String name;
-    private City whereTo;
+    private int whereFrom;
+    private int whereTo;
     private int priority;
     
-    public Shipment(String name, City whereTo, int priority) {
+    public Shipment(int id, String name, int whereFrom, int whereTo, int priority) {
+        this.id = id;
         this.name = name;
+        this.whereFrom = whereFrom;
         this.whereTo = whereTo;
         this.priority = priority;
+    }
+    
+    public int getId() {
+        return id;
     }
     
     public String getName() {
         return name;
     }
     
-    public City whereTo() {
+    public int whereTo() {
         return whereTo;
     }
     
