@@ -5,9 +5,11 @@
  */
 package inputOutput;
 
-import exceptions.IncorrectInputFileFormat;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import map.City;
 import map.Map;
 
 /**
@@ -15,41 +17,42 @@ import map.Map;
  * @author Piotrek
  */
 public class Input {
+
     private File mapFile = null;
     private File shipmentsList = null;
-    
-    public void setMapFile(File file) throws IncorrectInputFileFormat, FileNotFoundException {
-        if (checkFileFormat(file)) {
-            mapFile = file;
-        } else {
-            throw new IncorrectInputFileFormat();
-        }
+    private int carsNumber = 0;
+
+    public void setMapFile(File file) {
+        mapFile = file;
     }
-    
+
     public void setShipmentsListFile(File file) {
         shipmentsList = file;
     }
-    
-    public Map returnMap() throws IOException{
-        if (mapFile == null) {
-            throw new FileNotFoundException();
-        }
-        
 
-                
-        return null;       
-    }
-    
-    private boolean checkFileFormat(File file) throws FileNotFoundException {
-        Scanner reader;
-        if (file.exists()) {
-            reader = new Scanner(file);
-            while (reader.hasNext()) {
-                
+    public Map returnMap() throws IOException {
+        Scanner reader = new Scanner(mapFile);
+        Map map = null;
+        ArrayList<City> cities;
+        String buffer = reader.nextLine();
+        String splited[] = buffer.split("//s+");
+        if (splited[0].equals("#")) {
+            if (splited[1].equals("miasta")) {
+                cities = makeCities(reader);
+                map = new Map((City[]) cities.toArray());
+            } else if (splited[1].equals("połączenia")) {
+                makeConnections(reader, map);
             }
-        } else {
-            return false;
         }
-        return true;
+
+        return map;
+    }
+
+    private ArrayList<City> makeCities(Scanner reader) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void makeConnections(Scanner reader, Map map) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
