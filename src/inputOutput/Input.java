@@ -82,7 +82,7 @@ public class Input {
         return base;
     }
 
-    public Map returnMap() throws IOException {
+    public Map returnMap() throws FileNotFoundException {
         Scanner reader = new Scanner(mapFile);
         Map map = new Map();
         String buffer;
@@ -116,5 +116,8 @@ public class Input {
 
         return result;
     }
-
+    
+    public int returnCarsNumber() {
+        return carsNumber;
+    }
 }
