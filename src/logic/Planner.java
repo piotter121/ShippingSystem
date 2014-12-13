@@ -10,10 +10,11 @@ package logic;
  * @author Piotrek
  */
 public class Planner {
+
     private static final int INFINITY = Integer.MAX_VALUE;
-    
-    private int base = 0;
-    
+
+    private int base = -1;
+
     public void setBase(int base) {
         this.base = base;
     }

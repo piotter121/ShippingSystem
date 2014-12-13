@@ -10,5 +10,5 @@ package car;
  * @author Piotrek
  */
 public class Car extends Thread {
-    
+
 }

@@ -19,29 +19,56 @@ import order.ShipmentsList;
  * @author Piotrek
  */
 public class Program {
+
+    private Input loader;
+    private Planner planner;
+    private Map mainMap;
+    private ShipmentsList ordersQueue;
+    private int carsNumber;
+
+    public Program() {
+        loader = Input.getInstance();
+        planner = new Planner();
+    }
+
     public static void main(String[] args) {
-        Input loader = Input.getInstance();        
-        Planner planner = new Planner();
-        Map mainMap;
-        ShipmentsList ordersQueue;
-        int carsNumber;
-        
+        if (args.length < 3) {
+            System.err.println("Zbyt mało argumentów wejściowych");
+            System.exit(-1);
+        }
+        Program p = new Program();
+        p.initiateSystem(args[0], args[1], args[2]);
+        //p.pickShipments();
+        //p.sendCars();
+    }
+
+    public void initiateSystem(String... args) {
         loader.setMapFile(new File(args[0]));
         loader.setShipmentsListFile(new File(args[1]));
-        loader.setCarsNumber(Integer.parseInt(args[2]));
-        
         try {
-            mainMap = loader.returnMap();
-            ordersQueue = loader.returnShipmentsList();
+            loader.setCarsNumber(Integer.parseInt(args[2]));
+            mainMap = loader.returnMap(); System.out.println("Wczytano mapę \n" + mainMap);
+            ordersQueue = loader.returnShipmentsList(); System.out.println("Wczytano listę zleceń\n");
+        } catch (NumberFormatException ex) {
+            System.err.println("Nie prawidłowy argument jako liczba samochodów: " + args[2]);
+            System.exit(-1);
         } catch (FileNotFoundException ex) {
             System.err.println("Nie znaleziono pliku " + args[0] + " zawierającego mapę");
             Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(-1);
         } catch (IncorrectFileFormatException ex) {
-            Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Nie pridłowy format jednego z plików wejściowych");
             System.exit(-1);
         }
-        carsNumber = loader.returnCarsNumber();
-        planner.setBase(loader.returnBase());
+        carsNumber = loader.returnCarsNumber(); System.out.println("Zainicowano liczbę samochodów: " + carsNumber);
+        planner.setBase(loader.returnBase()); System.out.println("Ustalono bazę");
+    }
+
+    private void pickShipments() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void sendCars() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

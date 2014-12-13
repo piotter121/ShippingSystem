@@ -116,7 +116,7 @@ public class Input {
 
         return result;
     }
-    
+
     public int returnCarsNumber() {
         return carsNumber;
     }
