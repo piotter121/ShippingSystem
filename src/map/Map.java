@@ -89,4 +89,8 @@ public class Map {
 
         return result;
     }
+    
+    public ArrayList<City> getCities() {
+        return cities;
+    }
 }

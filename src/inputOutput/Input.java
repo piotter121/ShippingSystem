@@ -19,30 +19,21 @@ import order.ShipmentsList;
  */
 public class Input {
 
-    private final static Input instance = new Input();
-
-    private File mapFile = null;
-    private File shipmentsList = null;
-    private int carsNumber = 0;
+    private File mapFile;
+    private File shipmentsList;
+    private int carsNumber;
     private int base = - 1;
+    private int capacity;
 
-    private Input() {
-    }
-
-    public static Input getInstance() {
-        return instance;
-    }
-
-    public void setMapFile(File file) {
-        mapFile = file;
-    }
-
-    public void setShipmentsListFile(File file) {
-        shipmentsList = file;
-    }
-
-    public void setCarsNumber(int i) {
-        carsNumber = i;
+    public Input(String map, String list, String cars, String capacity) throws IllegalArgumentException {
+        mapFile = new File(map);
+        shipmentsList = new File(list);
+        try {
+            carsNumber = Integer.parseInt(cars);
+            this.capacity = Integer.parseInt(capacity);
+        } catch (NumberFormatException x) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public ShipmentsList returnShipmentsList() throws FileNotFoundException, IncorrectFileFormatException {
@@ -119,5 +110,9 @@ public class Input {
 
     public int returnCarsNumber() {
         return carsNumber;
+    }
+    
+    public int returnCarsCapacity() {
+        return capacity;
     }
 }

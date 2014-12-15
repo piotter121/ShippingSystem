@@ -5,6 +5,7 @@
  */
 package logic;
 
+import car.Car;
 import exceptions.IncorrectFileFormatException;
 import inputOutput.Input;
 import java.io.File;
@@ -24,48 +25,47 @@ public class Program {
     private Planner planner;
     private Map mainMap;
     private ShipmentsList ordersQueue;
+    private Car[] cars;
     private int carsNumber;
 
     public Program() {
-        loader = Input.getInstance();
         planner = new Planner();
     }
 
     public static void main(String[] args) {
-        if (args.length < 3) {
+        if (args.length < 4) {
             System.err.println("Zbyt mało argumentów wejściowych");
             System.exit(-1);
         }
         Program p = new Program();
-        p.initiateSystem(args[0], args[1], args[2]);
-        //p.pickShipments();
-        //p.sendCars();
+        p.initiateSystem(args);
+        p.pickShipments();
+        p.sendCars();
     }
 
     public void initiateSystem(String... args) {
-        loader.setMapFile(new File(args[0]));
-        loader.setShipmentsListFile(new File(args[1]));
+        loader = new Input(args[0], args[1], args[2], args[3]);
         try {
-            loader.setCarsNumber(Integer.parseInt(args[2]));
-            mainMap = loader.returnMap(); System.out.println("Wczytano mapę \n" + mainMap);
-            ordersQueue = loader.returnShipmentsList(); System.out.println("Wczytano listę zleceń\n");
-        } catch (NumberFormatException ex) {
-            System.err.println("Nie prawidłowy argument jako liczba samochodów: " + args[2]);
-            System.exit(-1);
+            mainMap = loader.returnMap();
+            ordersQueue = loader.returnShipmentsList();
         } catch (FileNotFoundException ex) {
             System.err.println("Nie znaleziono pliku " + args[0] + " zawierającego mapę");
-            Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(-1);
         } catch (IncorrectFileFormatException ex) {
             System.err.println("Nie pridłowy format jednego z plików wejściowych");
             System.exit(-1);
         }
-        carsNumber = loader.returnCarsNumber(); System.out.println("Zainicowano liczbę samochodów: " + carsNumber);
-        planner.setBase(loader.returnBase()); System.out.println("Ustalono bazę");
+        carsNumber = loader.returnCarsNumber();
+        cars = new Car[carsNumber];
+        for (int i = 0; i < carsNumber; i++) {
+            cars[i] = new Car(loader.returnCarsCapacity());
+        }
+        planner.setBase(loader.returnBase());
     }
 
     private void pickShipments() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        planner.calculatePaths(mainMap);
+        planner.pickShipmentsToCars(cars, ordersQueue);
     }
 
     private void sendCars() {
