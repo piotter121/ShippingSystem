@@ -60,7 +60,12 @@ public class Map {
         City i = getCityById(a);
         City j = getCityById(b);
         if (i != null && j != null) {
-            return connections.get(cities.indexOf(i), cities.indexOf(j));
+            Integer o = connections.get(cities.indexOf(i), cities.indexOf(j));
+            if (o == null) {
+                return -1;
+            } else {
+                return o;
+            }
         } else {
             return -1;
         }
@@ -89,7 +94,7 @@ public class Map {
 
         return result;
     }
-    
+
     public ArrayList<City> getCities() {
         return cities;
     }

@@ -6,6 +6,8 @@
 package car;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import map.City;
 import order.Shipment;
 
 /**
@@ -16,17 +18,33 @@ public class Car extends Thread {
 
     private int capacity;
     private int numberOfShipments;
-    private ArrayList<Shipment> shipments;
+    private HashMap<Integer, Shipment> shipments;
+    private ArrayList<Integer> order;
+    private boolean isOnWay;
 
     public Car(int c) {
         super();
         capacity = c;
         numberOfShipments = 0;
-        shipments = new ArrayList<>();
+        shipments = new HashMap<>();
+        order = new ArrayList<>();
+        isOnWay = false;
+    }
+
+    @Override
+    public void run() {
+        isOnWay = true;
+    }
+
+    public boolean isFull() {
+        return (numberOfShipments == capacity);
     }
 
     public void addShipment(Shipment s) {
-        shipments.add(s);
+        if (numberOfShipments + 1 <= capacity) {
+            shipments.put(s.whereTo(), s);
+            numberOfShipments++;
+        }
     }
 
     public Shipment getShipment(int i) {
@@ -36,10 +54,27 @@ public class Car extends Thread {
             return null;
         }
     }
-    
+
+    public int getCapacity() {
+        return capacity;
+    }
+
     public void removeShipment(int i) {
         if (i < capacity) {
             shipments.remove(i);
+            numberOfShipments--;
         }
+    }
+
+    public boolean isEmpty() {
+        return shipments.isEmpty();
+    }
+
+    public boolean isOnWay(int city) {
+        return order.contains(city);
+    }
+    
+    public void addPath(ArrayList<Integer> path) {
+        order.addAll(path);
     }
 }

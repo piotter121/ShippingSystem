@@ -36,7 +36,7 @@ public class Matrix<T> {
         if (m >= 0 && m < rows && n >= 0 && n < cols) {
             return (T) matrix[m * cols + n];
         } else {
-            return null;
+            throw new IndexOutOfBoundsException();
         }
     }
 

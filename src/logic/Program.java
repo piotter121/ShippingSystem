@@ -8,10 +8,7 @@ package logic;
 import car.Car;
 import exceptions.IncorrectFileFormatException;
 import inputOutput.Input;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import map.Map;
 import order.ShipmentsList;
 
@@ -39,8 +36,7 @@ public class Program {
         }
         Program p = new Program();
         p.initiateSystem(args);
-        p.pickShipments();
-        p.sendCars();
+        p.startSystem();
     }
 
     public void initiateSystem(String... args) {
@@ -63,12 +59,10 @@ public class Program {
         planner.setBase(loader.returnBase());
     }
 
-    private void pickShipments() {
+    private void startSystem() {
         planner.calculatePaths(mainMap);
-        planner.pickShipmentsToCars(cars, ordersQueue);
-    }
-
-    private void sendCars() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        while (!ordersQueue.isEmpty()) {
+            planner.pickShipmentsToCars(cars, ordersQueue);
+        }
     }
 }

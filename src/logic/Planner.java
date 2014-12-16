@@ -8,9 +8,11 @@ package logic;
 import car.Car;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import map.City;
 import map.Map;
+import order.Shipment;
 import order.ShipmentsList;
 
 /**
@@ -41,7 +43,7 @@ public class Planner {
 
         d = new HashMap<>();
         p = new HashMap<>();
-        keys = q.keySet();
+        keys = new LinkedHashSet<>(q.keySet());
 
         initialize();
 
@@ -60,14 +62,57 @@ public class Planner {
         }
     }
 
-    void pickShipmentsToCars(Car[] cars, ShipmentsList ordersQueue) {
+    public void pickShipmentsToCars(Car[] cars, ShipmentsList ordersQueue) {
+        Shipment actual;
+        Car car = null;
+        while (checkCarsIfAvailable(cars)) {
+            actual = ordersQueue.getFromTop();
+            if ((car = checkOnWays(cars, actual.whereTo())) != null) {
+                car.addShipment(actual);
+            } else {
+                if (checkCarsIfAnyEmpty(cars)) {
+                    car = getEmpty(cars);
+                    car.addPath(calculateTo(actual.whereTo()));
+                    car.addShipment(actual);
+                } else {
+                    ordersQueue.add(actual);
+                    break;
+                }
+            }
+        }
+    }
+
+    private ArrayList<Integer> calculateTo(int i) {
+        ArrayList<Integer> path = new ArrayList<>();
+        return path;
+    }
+
+    private boolean checkCarsIfAnyEmpty(Car[] cars) {
+        boolean isAnyEmpty = false;
+        for (Car e : cars) {
+            if (e.isEmpty()) {
+                isAnyEmpty = true;
+            }
+        }
+        return isAnyEmpty;
+    }
+
+    private boolean checkCarsIfAvailable(Car[] cars) {
+        boolean ifAnyAvailable = false;
+        for (Car e : cars) {
+            if (!e.isFull()) {
+                ifAnyAvailable = true;
+            }
+        }
+        return ifAnyAvailable;
     }
 
     private int getMin() {
         int minVal = INFINITY;
         int minKey = 0;
-        for (int a : keys) {
-            if (d.get(a) < minVal) {
+        Set<Integer> k = q.keySet();
+        for (int a : k) {
+            if (d.get(a) < minVal || k.size() == 1) {
                 minVal = d.get(a);
                 minKey = a;
             }
@@ -103,8 +148,26 @@ public class Planner {
                 n.add(tmp);
             }
         }
-        
+
         return n;
+    }
+
+    private Car checkOnWays(Car[] cars, int city) {
+        for (Car e : cars) {
+            if (e.isOnWay(city)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    private Car getEmpty(Car[] cars) {
+        for (Car e : cars) {
+            if (e.isEmpty()) {
+                return e;
+            }
+        }
+        return null;
     }
 
 }
