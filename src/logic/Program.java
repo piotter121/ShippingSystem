@@ -9,6 +9,8 @@ import car.Car;
 import exceptions.IncorrectFileFormatException;
 import inputOutput.Input;
 import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import map.Map;
 import order.ShipmentsList;
 
@@ -20,6 +22,7 @@ public class Program {
 
     private Input loader;
     private Planner planner;
+    private Observer observer;
     private Map mainMap;
     private ShipmentsList ordersQueue;
     private Car[] cars;
@@ -27,6 +30,7 @@ public class Program {
 
     public Program() {
         planner = new Planner();
+        observer = new Observer(System.out);
     }
 
     public static void main(String[] args) {
@@ -37,6 +41,7 @@ public class Program {
         Program p = new Program();
         p.initiateSystem(args);
         p.startSystem();
+        System.out.println("Dotarło do końca");
     }
 
     public void initiateSystem(String... args) {
@@ -55,14 +60,33 @@ public class Program {
         cars = new Car[carsNumber];
         for (int i = 0; i < carsNumber; i++) {
             cars[i] = new Car(loader.returnCarsCapacity());
+            cars[i].addObserver(observer);
+            cars[i].addMap(mainMap);
         }
-        planner.setBase(loader.returnBase());
+        mainMap.setBase(loader.returnBase());
     }
 
     private void startSystem() {
         planner.calculatePaths(mainMap);
         while (!ordersQueue.isEmpty()) {
             planner.pickShipmentsToCars(cars, ordersQueue);
+            startRestOfCars();
+            for (Car e : cars) {
+                try {
+                    e.join();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
+                    System.exit(-2);
+                }
+            }
+        }
+    }
+
+    private void startRestOfCars() {
+        for (Car c : cars) {
+            if (!c.isAlive()) {
+                c.start();
+            }
         }
     }
 }

@@ -7,7 +7,11 @@ package car;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import logic.Observer;
 import map.City;
+import map.Map;
 import order.Shipment;
 
 /**
@@ -16,11 +20,16 @@ import order.Shipment;
  */
 public class Car extends Thread {
 
-    private int capacity;
+    private static int counter = 0;
+    private final int id = counter++;
+    private final int capacity;
     private int numberOfShipments;
     private HashMap<Integer, Shipment> shipments;
     private ArrayList<Integer> order;
+    private int position;
     private boolean isOnWay;
+    private Observer observer;
+    private Map map;
 
     public Car(int c) {
         super();
@@ -31,13 +40,51 @@ public class Car extends Thread {
         isOnWay = false;
     }
 
+    public void addObserver(Observer o) {
+        observer = o;
+    }
+
+    public void addMap(Map m) {
+        map = m;
+    }
+
     @Override
     public void run() {
         isOnWay = true;
+        observer.startCall(this);
+        int actualDestiny;
+        int delay;
+
+        while (!order.isEmpty()) {
+            actualDestiny = order.remove(order.size()-1);
+            delay = map.getConnection(position, actualDestiny);
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
+                System.exit(-3);
+            }
+            position = actualDestiny;
+            observer.callReachedDestination(this);
+            Shipment tmp = removeShipment(position);
+            if (tmp != null) {
+                observer.callRemovedShipment(this, tmp);
+            }
+        }
+
+        isOnWay = false;
     }
 
-    public boolean isFull() {
-        return (numberOfShipments == capacity);
+    public int position() {
+        return position;
+    }
+
+    public int getCarId() {
+        return id;
+    }
+
+    public synchronized boolean isAvailable() {
+        return !isOnWay;
     }
 
     public void addShipment(Shipment s) {
@@ -45,36 +92,37 @@ public class Car extends Thread {
             shipments.put(s.whereTo(), s);
             numberOfShipments++;
         }
+        if (numberOfShipments == capacity) {
+            this.start();
+        }
     }
 
     public Shipment getShipment(int i) {
-        if (i < capacity) {
-            return shipments.get(i);
-        } else {
-            return null;
-        }
+        return shipments.get(i);
     }
 
     public int getCapacity() {
         return capacity;
     }
 
-    public void removeShipment(int i) {
-        if (i < capacity) {
-            shipments.remove(i);
-            numberOfShipments--;
-        }
+    public Shipment removeShipment(int i) {
+        numberOfShipments--;
+        return shipments.remove(i);
     }
 
     public boolean isEmpty() {
         return shipments.isEmpty();
     }
 
-    public boolean isOnWay(int city) {
+    public boolean isOnPath(int city) {
         return order.contains(city);
     }
-    
+
     public void addPath(ArrayList<Integer> path) {
-        order.addAll(path);
+        order = path;
+    }
+    
+    public City positionCity() {
+        return map.getCityById(position);
     }
 }

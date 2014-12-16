@@ -23,17 +23,14 @@ public class Planner {
 
     private static final int INFINITY = Integer.MAX_VALUE - 1000;
 
-    private int base = -1;
     private HashMap<Integer, Integer> d, p;
     private HashMap<Integer, City> q, s;
     private Set<Integer> keys;
-
-    public void setBase(int base) {
-        this.base = base;
-    }
+    private Map m;
 
     public void calculatePaths(Map m) {
         q = new HashMap<>();
+        this.m = m;
         ArrayList<City> tmp = new ArrayList<>(m.getCities());
         for (City temp : tmp) {
             q.put(temp.getId(), temp);
@@ -64,8 +61,8 @@ public class Planner {
 
     public void pickShipmentsToCars(Car[] cars, ShipmentsList ordersQueue) {
         Shipment actual;
-        Car car = null;
-        while (checkCarsIfAvailable(cars)) {
+        Car car;
+        while (checkCarsIfAvailable(cars) && !ordersQueue.isEmpty()) {
             actual = ordersQueue.getFromTop();
             if ((car = checkOnWays(cars, actual.whereTo())) != null) {
                 car.addShipment(actual);
@@ -76,7 +73,7 @@ public class Planner {
                     car.addShipment(actual);
                 } else {
                     ordersQueue.add(actual);
-                    break;
+                    return;
                 }
             }
         }
@@ -84,6 +81,12 @@ public class Planner {
 
     private ArrayList<Integer> calculateTo(int i) {
         ArrayList<Integer> path = new ArrayList<>();
+        while (i != m.getBase()) {
+            if (i > -1) {
+                path.add(i);
+                i = p.get(i);
+            }
+        }
         return path;
     }
 
@@ -100,7 +103,7 @@ public class Planner {
     private boolean checkCarsIfAvailable(Car[] cars) {
         boolean ifAnyAvailable = false;
         for (Car e : cars) {
-            if (!e.isFull()) {
+            if (e.isAvailable()) {
                 ifAnyAvailable = true;
             }
         }
@@ -128,7 +131,7 @@ public class Planner {
 
     private void initialize() {
         for (int key : keys) {
-            if (key == base) {
+            if (key == m.getBase()) {
                 d.put(key, 0);
                 p.put(key, -1);
             } else {
@@ -154,7 +157,7 @@ public class Planner {
 
     private Car checkOnWays(Car[] cars, int city) {
         for (Car e : cars) {
-            if (e.isOnWay(city)) {
+            if (e.isOnPath(city)) {
                 return e;
             }
         }

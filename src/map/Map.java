@@ -17,6 +17,7 @@ public class Map {
 
     private Matrix<Integer> connections;
     private ArrayList<City> cities;
+    private int base;
 
     public Map(City... c) {
         cities = new ArrayList<>(Arrays.asList(c));
@@ -27,6 +28,14 @@ public class Map {
     public Map() {
         connections = new Matrix<>(0, 0);
         cities = new ArrayList<>();
+    }
+
+    public void setBase(int i) {
+        base = i;
+    }
+
+    public int getBase() {
+        return base;
     }
 
     private void initDiag() {
