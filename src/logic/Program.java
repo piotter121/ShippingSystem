@@ -41,7 +41,6 @@ public class Program {
         Program p = new Program();
         p.initiateSystem(args);
         p.startSystem();
-        System.out.println("Dotarło do końca");
     }
 
     public void initiateSystem(String... args) {
@@ -71,14 +70,14 @@ public class Program {
         while (!ordersQueue.isEmpty()) {
             planner.pickShipmentsToCars(cars, ordersQueue);
             startRestOfCars();
-            for (Car e : cars) {
-                try {
-                    e.join();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
-                    System.exit(-2);
-                }
-            }
+//            for (Car e : cars) {
+//                try {
+//                    e.join();
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
+//                    System.exit(-2);
+//                }
+//            }
         }
     }
 

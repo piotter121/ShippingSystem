@@ -29,7 +29,6 @@ public class Observer {
         outStr.print(relativeTime + " ");
         outStr.print(": Samochód nr " + c.getCarId() + " ");
         outStr.print("wyruszył z bazy\n");
-        outStr.println("//******************************************//");
     }
 
     public synchronized void callRemovedShipment(Car c, Shipment s) {
@@ -38,7 +37,6 @@ public class Observer {
         outStr.print(": Samochód nr " + c.getCarId() + " ");
         outStr.print("dostarczył przesyłkę: " + s.getName());
         outStr.print(" do miasta: " + c.positionCity() + "\n");
-        outStr.println("//******************************************//");
     }
 
     public synchronized void callReachedDestination(Car c) {
@@ -46,6 +44,5 @@ public class Observer {
         outStr.print(relativeTime + " ");
         outStr.print(": Samochód nr " + c.getCarId() + " ");
         outStr.print("dotarł do miasta: " + c.positionCity() + "\n");
-        outStr.println("//******************************************//");
     }
 }
