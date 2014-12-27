@@ -1,0 +1,22 @@
+# miasta
+0 MiaastoA
+1 MiaastoB
+2 MiaastoC
+3 MiaastoD
+4 MiaastoA
+5 MiaastoB
+6 MiaastoC
+7 MiaastoD
+8 MiaastoA
+9 MiaastoB
+10 MiaastoC
+11 MiaastoD
+
+# połączenia
+0 1 1
+0 2 2
+2 3 1
+2 1 1
+1 3 4
+3 4 10
+3 5 11

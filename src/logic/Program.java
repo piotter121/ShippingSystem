@@ -5,6 +5,7 @@
  */
 package logic;
 
+import inputOutput.Observer;
 import car.Car;
 import exceptions.IncorrectFileFormatException;
 import inputOutput.Input;
@@ -52,7 +53,7 @@ public class Program {
             System.err.println("Nie znaleziono pliku " + args[0] + " zawierającego mapę");
             System.exit(-1);
         } catch (IncorrectFileFormatException ex) {
-            System.err.println("Nie pridłowy format jednego z plików wejściowych");
+            System.err.println("Nie prawidłowy format jednego z plików wejściowych");
             System.exit(-1);
         }
         carsNumber = loader.returnCarsNumber();
@@ -65,25 +66,25 @@ public class Program {
         mainMap.setBase(loader.returnBase());
     }
 
-    private void startSystem() {
+    public void startSystem() {
         planner.calculatePaths(mainMap);
         while (!ordersQueue.isEmpty()) {
             planner.pickShipmentsToCars(cars, ordersQueue);
             startRestOfCars();
-//            for (Car e : cars) {
-//                try {
-//                    e.join();
-//                } catch (InterruptedException ex) {
-//                    Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
-//                    System.exit(-2);
-//                }
-//            }
+            for (Car e : cars) {
+                try {
+                    e.join();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
+                    System.exit(-2);
+                }
+            }
         }
     }
 
-    private void startRestOfCars() {
+    private synchronized void startRestOfCars() {
         for (Car c : cars) {
-            if (!c.isAlive()) {
+            if (!c.isAlive() && c.hasShipment()) {
                 c.start();
             }
         }

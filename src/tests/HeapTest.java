@@ -6,7 +6,7 @@
 package tests;
 
 import dataStructures.Heap;
-import java.util.Random;
+import order.Shipment;
 
 /**
  *
@@ -15,12 +15,13 @@ import java.util.Random;
 public class HeapTest {
 
     public static void main(String[] args) {
-        Heap<Integer> h = new Heap<>();
-        Random r = new Random();
-        for (int i = 0; i < 10; i++) {
-            h.push(r.nextInt());
-        }
-        for (int i = 0; i < 10; i++) 
+        Heap<Shipment> h = new Heap<>();
+        h.push(new Shipment(0, 3, 0, "Laptop dla p. Kowalskiego", 0));
+        h.push(new Shipment(1, 3, 2, "Robot dla NASA", 0));
+        h.push(new Shipment(2, 3, 0, "Paczka indeksów dla PW", 0));
+        h.push(new Shipment(3, 3, 1, "Pudełka dla IKEA", 10));
+        while (!h.isEmpty()) {
             System.out.println(h.pop());
+        }
     }
 }

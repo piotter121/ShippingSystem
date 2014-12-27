@@ -87,14 +87,16 @@ public class Planner {
                 i = p.get(i);
             }
         }
+        //if (path.isEmpty())
         return path;
     }
 
     private boolean checkCarsIfAnyEmpty(Car[] cars) {
         boolean isAnyEmpty = false;
         for (Car e : cars) {
-            if (e.isEmpty()) {
+            if (e.isEmpty() && e.isAvailable()) {
                 isAnyEmpty = true;
+                break;
             }
         }
         return isAnyEmpty;
@@ -157,7 +159,7 @@ public class Planner {
 
     private Car checkOnWays(Car[] cars, int city) {
         for (Car e : cars) {
-            if (e.isOnPath(city)) {
+            if (e.isOnPath(city) && e.isAvailable()) {
                 return e;
             }
         }
@@ -166,7 +168,7 @@ public class Planner {
 
     private Car getEmpty(Car[] cars) {
         for (Car e : cars) {
-            if (e.isEmpty()) {
+            if (e.isEmpty() && e.isAvailable()) {
                 return e;
             }
         }

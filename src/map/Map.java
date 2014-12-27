@@ -51,7 +51,7 @@ public class Map {
             connections.set(cities.indexOf(i), cities.indexOf(j), value);
             connections.set(cities.indexOf(j), cities.indexOf(i), value);
         } else {
-            System.out.println("Nie znaleziono połączenia między miastem nr " + a
+            System.err.println("Nie znaleziono połączenia między miastem nr " + a
                     + " a miastem nr " + b);
         }
     }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import logic.Observer;
+import inputOutput.Observer;
 import map.City;
 import map.Map;
 import order.Shipment;
@@ -24,10 +24,9 @@ public class Car extends Thread {
     private final int id = counter++;
     private final int capacity;
     private int numberOfShipments;
-    private HashMap<Integer, Shipment> shipments;
-    private ArrayList<Integer> order;
+    private HashMap<Integer, ArrayList<Shipment>> shipments;
+    private ArrayList<Integer> path;
     private int position;
-    private boolean isOnWay;
     private Observer observer;
     private Map map;
 
@@ -36,8 +35,7 @@ public class Car extends Thread {
         capacity = c;
         numberOfShipments = 0;
         shipments = new HashMap<>();
-        order = new ArrayList<>();
-        isOnWay = false;
+        path = new ArrayList<>();
     }
 
     public void addObserver(Observer o) {
@@ -50,13 +48,12 @@ public class Car extends Thread {
 
     @Override
     public void run() {
-        isOnWay = true;
         observer.startCall(this);
         int actualDestiny;
         int delay;
 
-        while (!order.isEmpty()) {
-            actualDestiny = order.remove(order.size()-1);
+        while (!path.isEmpty()) {
+            actualDestiny = path.remove(path.size() - 1);
             delay = map.getConnection(position, actualDestiny);
             try {
                 Thread.sleep(delay);
@@ -66,13 +63,13 @@ public class Car extends Thread {
             }
             position = actualDestiny;
             observer.callReachedDestination(this);
-            Shipment tmp = removeShipment(position);
-            if (tmp != null) {
-                observer.callRemovedShipment(this, tmp);
+            ArrayList<Shipment> tmp = removeShipment(position);
+            if (!tmp.isEmpty()) {
+                for (Shipment e : tmp) {
+                    observer.callRemovedShipment(this, e);
+                }
             }
         }
-
-        isOnWay = false;
     }
 
     public int position() {
@@ -83,13 +80,18 @@ public class Car extends Thread {
         return id;
     }
 
-    public synchronized boolean isAvailable() {
-        return !isOnWay;
+    public boolean isAvailable() {
+        return !isAlive();
     }
 
-    public void addShipment(Shipment s) {
+    public synchronized void addShipment(Shipment s) {
         if (numberOfShipments + 1 <= capacity) {
-            shipments.put(s.whereTo(), s);
+            ArrayList<Shipment> tmp = shipments.get(s.whereTo());
+            if (tmp == null) {
+                tmp = new ArrayList<>();
+            }
+            tmp.add(s);
+            shipments.put(s.whereTo(), tmp);
             numberOfShipments++;
         }
         if (numberOfShipments == capacity) {
@@ -97,7 +99,11 @@ public class Car extends Thread {
         }
     }
 
-    public Shipment getShipment(int i) {
+    public boolean hasShipment() {
+        return numberOfShipments > 0;
+    }
+
+    public ArrayList<Shipment> getShipments(int i) {
         return shipments.get(i);
     }
 
@@ -105,7 +111,7 @@ public class Car extends Thread {
         return capacity;
     }
 
-    public Shipment removeShipment(int i) {
+    public ArrayList<Shipment> removeShipment(int i) {
         numberOfShipments--;
         return shipments.remove(i);
     }
@@ -115,14 +121,22 @@ public class Car extends Thread {
     }
 
     public boolean isOnPath(int city) {
-        return order.contains(city);
+        return path.contains(city);
     }
 
     public void addPath(ArrayList<Integer> path) {
-        order = path;
+        this.path = path;
     }
-    
+
     public City positionCity() {
         return map.getCityById(position);
+    }
+
+    @Override
+    public String toString() {
+        String result = new String();
+        result += id + " ";
+        result += shipments.toString() + "\n";
+        return result;
     }
 }
