@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tests;
+package shippingSystem.exceptions;
 
 /**
  *
  * @author Piotrek
  */
-public class PlannerTest {
+public class IncorrectFileFormatException extends Exception {
     
 }

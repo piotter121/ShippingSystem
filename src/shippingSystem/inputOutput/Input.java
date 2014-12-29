@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package inputOutput;
+package shippingSystem.inputOutput;
 
-import exceptions.CityNotFoundException;
-import exceptions.IncorrectFileFormatException;
+import shippingSystem.exceptions.CityNotFoundException;
+import shippingSystem.exceptions.IncorrectFileFormatException;
 import java.io.*;
 import java.util.Scanner;
-import map.City;
-import map.Map;
-import order.Shipment;
-import order.ShipmentsList;
+import shippingSystem.map.City;
+import shippingSystem.map.Map;
+import shippingSystem.shipments.Shipment;
+import shippingSystem.shipments.ShipmentsList;
 
 /**
  *

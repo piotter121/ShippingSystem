@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package logic;
+package shippingSystem.logic;
 
-import car.Car;
+import shippingSystem.car.Car;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import map.City;
-import map.Map;
-import order.Shipment;
-import order.ShipmentsList;
+import shippingSystem.map.City;
+import shippingSystem.map.Map;
+import shippingSystem.shipments.Shipment;
+import shippingSystem.shipments.ShipmentsList;
 
 /**
  *

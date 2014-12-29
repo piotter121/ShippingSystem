@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package logic;
+package shippingSystem.logic;
 
-import inputOutput.Observer;
-import car.Car;
-import exceptions.IncorrectFileFormatException;
-import inputOutput.Input;
+import shippingSystem.inputOutput.Observer;
+import shippingSystem.car.Car;
+import shippingSystem.exceptions.IncorrectFileFormatException;
+import shippingSystem.inputOutput.Input;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import map.Map;
-import order.ShipmentsList;
+import shippingSystem.map.Map;
+import shippingSystem.shipments.ShipmentsList;
 
 /**
  *

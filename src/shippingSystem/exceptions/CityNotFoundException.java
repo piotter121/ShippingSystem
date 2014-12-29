@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package exceptions;
+package shippingSystem.exceptions;
 
 /**
  *
  * @author Piotrek
  */
-public class IncorrectFileFormatException extends Exception {
+public class CityNotFoundException extends Exception {
+
+    public CityNotFoundException() {
+    }
     
 }

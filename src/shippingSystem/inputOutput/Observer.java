@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package inputOutput;
+package shippingSystem.inputOutput;
 
-import car.Car;
+import shippingSystem.car.Car;
 import java.io.PrintStream;
-import order.Shipment;
+import shippingSystem.shipments.Shipment;
 
 /**
  *

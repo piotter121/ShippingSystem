@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package car;
+package shippingSystem.car;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import inputOutput.Observer;
-import map.City;
-import map.Map;
-import order.Shipment;
+import shippingSystem.inputOutput.Observer;
+import shippingSystem.map.City;
+import shippingSystem.map.Map;
+import shippingSystem.shipments.Shipment;
 
 /**
  *
