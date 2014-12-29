@@ -5,7 +5,7 @@
  */
 package shippingSystem.logic;
 
-import shippingSystem.inputOutput.Observer;
+import shippingSystem.inputOutput.Controler;
 import shippingSystem.car.Car;
 import shippingSystem.exceptions.IncorrectFileFormatException;
 import shippingSystem.inputOutput.Input;
@@ -23,7 +23,7 @@ public class Program {
 
     private Input loader;
     private Planner planner;
-    private Observer observer;
+    private Controler observer;
     private Map mainMap;
     private ShipmentsList ordersQueue;
     private Car[] cars;
@@ -31,7 +31,7 @@ public class Program {
 
     public Program() {
         planner = new Planner();
-        observer = new Observer(System.out);
+        observer = new Controler(System.out);
     }
 
     public static void main(String[] args) {

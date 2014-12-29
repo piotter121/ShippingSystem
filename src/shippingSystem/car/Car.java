@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import shippingSystem.inputOutput.Observer;
+import shippingSystem.inputOutput.Controler;
 import shippingSystem.map.City;
 import shippingSystem.map.Map;
 import shippingSystem.shipments.Shipment;
@@ -27,19 +27,21 @@ public class Car extends Thread {
     private HashMap<Integer, ArrayList<Shipment>> shipments;
     private ArrayList<Integer> path;
     private int position;
-    private Observer observer;
+    private Controler controller;
     private Map map;
+    private int time;
 
     public Car(int c) {
         super();
+        time = 0;
         capacity = c;
         numberOfShipments = 0;
         shipments = new HashMap<>();
         path = new ArrayList<>();
     }
 
-    public void addObserver(Observer o) {
-        observer = o;
+    public void addObserver(Controler o) {
+        controller = o;
     }
 
     public void addMap(Map m) {
@@ -48,12 +50,12 @@ public class Car extends Thread {
 
     @Override
     public void run() {
-        observer.startCall(this);
+        controller.startCall(this);
         int actualDestiny;
         int delay;
 
         while (!path.isEmpty()) {
-            actualDestiny = path.remove(path.size() - 1);
+            actualDestiny = nextPosition();
             delay = map.getConnection(position, actualDestiny);
             try {
                 Thread.sleep(delay);
@@ -62,11 +64,11 @@ public class Car extends Thread {
                 System.exit(-3);
             }
             position = actualDestiny;
-            observer.callReachedDestination(this);
+            controller.callReachedDestination(this);
             ArrayList<Shipment> tmp = removeShipment(position);
             if (!tmp.isEmpty()) {
                 for (Shipment e : tmp) {
-                    observer.callRemovedShipment(this, e);
+                    controller.callRemovedShipment(this, e);
                 }
             }
         }
@@ -94,6 +96,7 @@ public class Car extends Thread {
             shipments.put(s.whereTo(), tmp);
             numberOfShipments++;
         }
+        controller.callAddedShipment(this, s);
         if (numberOfShipments == capacity) {
             this.start();
         }
@@ -139,4 +142,11 @@ public class Car extends Thread {
         result += shipments.toString() + "\n";
         return result;
     }
+
+    private int nextPosition() {
+        int actualDestiny = path.remove(path.size() - 1);
+        time += map.getConnection(position, actualDestiny);
+        return actualDestiny;
+    }
+
 }
