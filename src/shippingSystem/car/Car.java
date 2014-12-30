@@ -66,12 +66,15 @@ public class Car extends Thread {
             position = actualDestiny;
             controller.callReachedDestination(this);
             ArrayList<Shipment> tmp = removeShipment(position);
-            if (!tmp.isEmpty()) {
+            if (tmp != null && !tmp.isEmpty()) {
                 for (Shipment e : tmp) {
                     controller.callRemovedShipment(this, e);
                 }
             }
         }
+        time = 0;
+        position = map.getBase();
+        controller.callFinishedTrace(this);
     }
 
     public int position() {
@@ -133,6 +136,10 @@ public class Car extends Thread {
 
     public City positionCity() {
         return map.getCityById(position);
+    }
+
+    public int getTime() {
+        return time;
     }
 
     @Override

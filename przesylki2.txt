@@ -1,7 +1,5 @@
 3
-000 3 5 Q 100
-002 3 1 W 94
-001 3 2 E 90
-003 3 1 R 87
-004 3 5 T 85
-005 3 4 Y 80
+001 3 0 Laptop dla p. Kowalskiego 40
+002 3 2 Robot dla NASA 100
+003 3 0 Paczka indeksów dla PW 0 
+004 3 4 Pudełka dla IKEA 10 

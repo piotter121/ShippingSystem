@@ -27,10 +27,13 @@ public class Planner {
     private HashMap<Integer, City> q, s;
     private Set<Integer> keys;
     private Map m;
-
-    public void calculatePaths(Map m) {
-        q = new HashMap<>();
+    
+    public Planner(Map m) {
         this.m = m;
+    }
+
+    public void calculatePaths() {
+        q = new HashMap<>();
         ArrayList<City> tmp = new ArrayList<>(m.getCities());
         for (City temp : tmp) {
             q.put(temp.getId(), temp);
@@ -87,7 +90,6 @@ public class Planner {
                 i = p.get(i);
             }
         }
-        //if (path.isEmpty())
         return path;
     }
 

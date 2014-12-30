@@ -16,41 +16,42 @@ import shippingSystem.shipments.Shipment;
 public class Controler {
 
     private PrintStream outStr;
-    private long startTime;
 
     public Controler(PrintStream o) {
         super();
         outStr = o;
-        startTime = System.nanoTime();
     }
 
     public synchronized void startCall(Car c) {
-        double relativeTime = 0;
-        outStr.print(relativeTime + " ");
+        outStr.print(c.getTime() + " ");
         outStr.print(": Samochód nr " + c.getCarId() + " ");
         outStr.print("wyruszył z bazy " + c.positionCity() + "\n");
     }
 
     public synchronized void callRemovedShipment(Car c, Shipment s) {
-        double relativeTime = 0;
-        outStr.print(relativeTime + " ");
+        outStr.print(c.getTime() + " ");
         outStr.print(": Samochód nr " + c.getCarId() + " ");
         outStr.print("dostarczył przesyłkę: " + s.getName());
-        outStr.print(" do miasta: " + c.positionCity() + "\n");
+        outStr.print(" do miasta: " + c.positionCity());
+        outStr.print(" w czasie " + c.getTime());
     }
 
     public synchronized void callReachedDestination(Car c) {
-        double relativeTime = 0;
-        outStr.print(relativeTime + " ");
+        outStr.print(c.getTime() + " ");
         outStr.print(": Samochód nr " + c.getCarId() + " ");
         outStr.print("dotarł do miasta: " + c.positionCity() + "\n");
     }
 
     public synchronized void callAddedShipment(Car c, Shipment s) {
-        double relativeTime = 0;
-        outStr.print(relativeTime + " ");
+        outStr.print(c.getTime() + " ");
         outStr.print(": Samochód nr " + c.getCarId() + " ");
         outStr.print("przyjął przesyłkę: " + s.getName() + "\n");
+    }
+
+    public synchronized void callFinishedTrace(Car c) {
+        outStr.print(c.getTime() + " ");
+        outStr.print(": Samochód nr " + c.getCarId() + " ");
+        outStr.print("dotarł do miasta: " + c.positionCity() + "\n");
     }
 
 }

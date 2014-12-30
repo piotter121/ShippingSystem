@@ -23,15 +23,14 @@ public class Program {
 
     private Input loader;
     private Planner planner;
-    private Controler observer;
+    private Controler controler;
     private Map mainMap;
     private ShipmentsList ordersQueue;
     private Car[] cars;
     private int carsNumber;
 
     public Program() {
-        planner = new Planner();
-        observer = new Controler(System.out);
+        controler = new Controler(System.out);
     }
 
     public static void main(String[] args) {
@@ -56,18 +55,19 @@ public class Program {
             System.err.println("Nie prawidłowy format jednego z plików wejściowych");
             System.exit(-1);
         }
+        planner = new Planner(mainMap);
         carsNumber = loader.returnCarsNumber();
         cars = new Car[carsNumber];
         for (int i = 0; i < carsNumber; i++) {
             cars[i] = new Car(loader.returnCarsCapacity());
-            cars[i].addObserver(observer);
+            cars[i].addObserver(controler);
             cars[i].addMap(mainMap);
         }
         mainMap.setBase(loader.returnBase());
     }
 
     public void startSystem() {
-        planner.calculatePaths(mainMap);
+        planner.calculatePaths();
         while (!ordersQueue.isEmpty()) {
             planner.pickShipmentsToCars(cars, ordersQueue);
             startRestOfCars();
@@ -84,7 +84,7 @@ public class Program {
 
     private synchronized void startRestOfCars() {
         for (Car c : cars) {
-            if (!c.isAlive() && c.hasShipment()) {
+            if (c.isAvailable() && c.hasShipment()) {
                 c.start();
             }
         }
