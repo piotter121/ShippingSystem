@@ -5,6 +5,7 @@
  */
 package shippingSystem.logic;
 
+import edu.uci.ics.jung.samples.AddNodeDemo;
 import shippingSystem.inputOutput.Controler;
 import shippingSystem.car.Car;
 import shippingSystem.exceptions.IncorrectFileFormatException;
@@ -21,7 +22,7 @@ import shippingSystem.shipments.ShipmentsList;
  */
 public class Program {
 
-    private Input loader;
+    public Input loader;
     private Planner planner;
     private Controler controler;
     private Map mainMap;

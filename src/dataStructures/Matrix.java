@@ -48,8 +48,7 @@ public class Matrix<T> {
                 T get = get(i, j);
                 if (get != null) {
                     result += get.toString() + ' ';
-                }
-                else {
+                } else {
                     result += "null ";
                 }
             }
@@ -64,5 +63,23 @@ public class Matrix<T> {
 
     public int getCols() {
         return cols;
+    }
+
+    public int[] getCoordinates(T obj) {
+        int[] coordinates = {-1, -1};
+        T tmp;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; i++) {
+                tmp = get(i, j);
+                if (obj.equals(tmp)) {
+                    coordinates[0] = i;
+                    coordinates[1] = j;
+                    return coordinates;
+                }
+            }
+        }
+
+        return coordinates;
     }
 }

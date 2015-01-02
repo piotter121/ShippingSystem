@@ -6,6 +6,7 @@
 package shippingSystem.map;
 
 import dataStructures.Matrix;
+import edu.uci.ics.jung.graph.SparseMultigraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -13,19 +14,21 @@ import java.util.Arrays;
  *
  * @author Piotrek
  */
-public class Map {
+public class Map extends SparseMultigraph<City, Integer> {
 
     private Matrix<Integer> connections;
     private ArrayList<City> cities;
     private int base;
 
     public Map(City... c) {
+        super();
         cities = new ArrayList<>(Arrays.asList(c));
         connections = new Matrix<>(cities.size(), cities.size());
         initDiag();
     }
 
     public Map() {
+        super();
         connections = new Matrix<>(0, 0);
         cities = new ArrayList<>();
     }
@@ -49,7 +52,9 @@ public class Map {
         City j = getCityById(b);
         if (i != null && j != null) {
             connections.set(cities.indexOf(i), cities.indexOf(j), value);
+            addEdge(value, i, j);
             connections.set(cities.indexOf(j), cities.indexOf(i), value);
+            addEdge(value, j, i);
         } else {
             System.err.println("Nie znaleziono połączenia między miastem nr " + a
                     + " a miastem nr " + b);
@@ -78,6 +83,7 @@ public class Map {
         } else {
             return -1;
         }
+
     }
 
     public void addCity(City c) {
@@ -90,6 +96,7 @@ public class Map {
         }
         connections = newConnections;
         initDiag();
+        addVertex(c);
     }
 
     @Override
@@ -107,4 +114,5 @@ public class Map {
     public ArrayList<City> getCities() {
         return cities;
     }
+
 }
