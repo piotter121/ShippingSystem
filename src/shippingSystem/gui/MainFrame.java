@@ -45,8 +45,7 @@ public class MainFrame extends JFrame {
             openListFileMenuItem,
             exitMenuItem;
     private JTextArea comunicates;
-    private JButton but;
-    
+
     private final JFileChooser fileChooser;
 
     public MainFrame() {
@@ -55,17 +54,15 @@ public class MainFrame extends JFrame {
         setSize(804, 653);
         setLayout(new FlowLayout());
         setTitle("ShippingSystem");
-        
+
         fileChooser = new JFileChooser();
-        
+
         initUpMenu();
         leftPanel();
         rightPanel();
         add(vv);
         add(rightPanel);
-        
-        but = new JButton("Button");
-        add(but);
+
     }
 
     private void initUpMenu() {
@@ -119,18 +116,18 @@ public class MainFrame extends JFrame {
         vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
         vv.getRenderer().getVertexLabelRenderer().setPosition(Position.AUTO);
         add(vv);
-        
+
         vv.setVisible(true);
     }
-    
+
     private void rightPanel() {
         rightPanel = new JPanel();
         rightPanel.setLayout(new FlowLayout());
-        
+
         comunicates = new JTextArea();
         comunicates.setVisible(true);
         rightPanel.add(comunicates);
-        
+
         rightPanel.setVisible(true);
     }
 }
