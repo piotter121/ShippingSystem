@@ -102,7 +102,7 @@ public class Car extends Thread {
             actualDestiny = nextPosition();
             delay = map.getConnection(position, actualDestiny);
             try {
-                Thread.sleep(delay * 1000);
+                Thread.sleep(delay);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(-3);

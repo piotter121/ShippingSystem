@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -44,14 +45,15 @@ public class MainFrame extends JFrame {
     private JMenuItem openMapFileMenuItem,
             openListFileMenuItem,
             exitMenuItem;
-    private JTextArea comunicates;
+    private JTextArea communicatesArea;
+    private JLabel communicatesLabel;
 
     private final JFileChooser fileChooser;
 
     public MainFrame() {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(804, 653);
+        setSize(1000, 650);
         setLayout(new FlowLayout());
         setTitle("ShippingSystem");
 
@@ -108,7 +110,7 @@ public class MainFrame extends JFrame {
     }
 
     private void leftPanel() {
-        Layout<String, String> layout = new CircleLayout((SparseMultigraph) new Map());
+        Layout<String, String> layout = new CircleLayout(new Map());
         layout.setSize(new Dimension(500, 400));
         vv = new BasicVisualizationServer<>(layout);
         vv.setPreferredSize(new Dimension(540, 440));
@@ -117,17 +119,17 @@ public class MainFrame extends JFrame {
         vv.getRenderer().getVertexLabelRenderer().setPosition(Position.AUTO);
         add(vv);
 
-        vv.setVisible(true);
     }
 
     private void rightPanel() {
-        rightPanel = new JPanel();
-        rightPanel.setLayout(new FlowLayout());
+        rightPanel = new RightPanel();
+        rightPanel.setLayout(new BorderLayout());
 
-        comunicates = new JTextArea(" ", 20, 30);
-        comunicates.setVisible(true);
-        rightPanel.add(comunicates);
+        communicatesLabel = new JLabel("Komunikaty");
+        rightPanel.add(communicatesLabel, BorderLayout.PAGE_START);
 
-        rightPanel.setVisible(true);
+        communicatesArea = new JTextArea(" ", 20, 30);
+        rightPanel.add(communicatesArea, BorderLayout.CENTER);
+
     }
 }
