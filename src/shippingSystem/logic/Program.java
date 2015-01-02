@@ -5,14 +5,17 @@
  */
 package shippingSystem.logic;
 
-import edu.uci.ics.jung.samples.AddNodeDemo;
-import shippingSystem.inputOutput.Controler;
+import java.io.File;
+import shippingSystem.inputOutput.StdOutNotyfier;
 import shippingSystem.car.Car;
 import shippingSystem.exceptions.IncorrectFileFormatException;
 import shippingSystem.inputOutput.Input;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import shippingSystem.exceptions.UnsignedInputFiles;
 import shippingSystem.map.Map;
 import shippingSystem.shipments.ShipmentsList;
 
@@ -22,49 +25,51 @@ import shippingSystem.shipments.ShipmentsList;
  */
 public class Program {
 
-    public Input loader;
     private Planner planner;
-    private Controler controler;
+    private ArrayList<Observer> obs;
     private Map mainMap;
     private ShipmentsList ordersQueue;
     private Car[] cars;
     private int carsNumber;
+    public Input systemInput;
 
     public Program() {
-        controler = new Controler(System.out);
+        obs = new ArrayList<>();
+        systemInput = new Input();
     }
 
-    public static void main(String[] args) {
-        if (args.length < 4) {
-            System.err.println("Zbyt mało argumentów wejściowych");
-            System.exit(-1);
-        }
-        Program p = new Program();
-        p.initiateSystem(args);
-        p.startSystem();
+    public Map getMap() {
+        return mainMap;
     }
-
-    public void initiateSystem(String... args) {
-        loader = new Input(args[0], args[1], args[2], args[3]);
+    
+    public ShipmentsList getShipmentsList() {
+        return ordersQueue;
+    }
+    
+    public void initiateSystem() throws UnsignedInputFiles {
         try {
-            mainMap = loader.returnMap();
-            ordersQueue = loader.returnShipmentsList();
+            mainMap = systemInput.returnMap();
+            ordersQueue = systemInput.returnShipmentsList();
         } catch (FileNotFoundException ex) {
-            System.err.println("Nie znaleziono pliku " + args[0] + " zawierającego mapę");
+            System.err.println("Nie znaleziono pliku zawierającego mapę");
             System.exit(-1);
         } catch (IncorrectFileFormatException ex) {
             System.err.println("Nie prawidłowy format jednego z plików wejściowych");
             System.exit(-1);
         }
+        if (mainMap == null || ordersQueue == null) {
+            throw new UnsignedInputFiles();
+        }
         planner = new Planner(mainMap);
-        carsNumber = loader.returnCarsNumber();
+        carsNumber = systemInput.returnCarsNumber();
         cars = new Car[carsNumber];
+        Observer o = new StdOutNotyfier();
         for (int i = 0; i < carsNumber; i++) {
-            cars[i] = new Car(loader.returnCarsCapacity());
-            cars[i].addObserver(controler);
+            cars[i] = new Car(systemInput.returnCarsCapacity());
+            cars[i].addObserver(o);
             cars[i].addMap(mainMap);
         }
-        mainMap.setBase(loader.returnBase());
+        mainMap.setBase(systemInput.returnBase());
     }
 
     public void startSystem() {
@@ -89,5 +94,23 @@ public class Program {
                 c.start();
             }
         }
+    }
+    
+    public static void main(String[] args) {
+        if (args.length < 4) {
+            System.err.println("Zbyt mało argumentów wejściowych");
+            System.exit(-4);
+        }
+        Program p = new Program();
+        p.systemInput.setMapFile(new File(args[0]));
+        p.systemInput.setShipmentListFile(new File(args[1]));
+        p.systemInput.setCarsNumber(Integer.parseInt(args[2]));
+        p.systemInput.setCarsCapacity(Integer.parseInt(args[3]));
+        try {
+            p.initiateSystem();
+        } catch (UnsignedInputFiles ex) {
+            System.err.println("Nie wczytano argumentów wejściowych");
+        }
+        p.startSystem();
     }
 }

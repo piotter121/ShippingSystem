@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import shippingSystem.inputOutput.Controler;
+import java.util.Observable;
+import java.util.Observer;
 import shippingSystem.map.City;
 import shippingSystem.map.Map;
 import shippingSystem.shipments.Shipment;
@@ -21,36 +22,79 @@ import shippingSystem.shipments.Shipment;
 public class Car extends Thread {
 
     private static int counter = 0;
-    private final int id = counter++;
+    private final int id;
     private final int capacity;
     private int numberOfShipments;
     private HashMap<Integer, ArrayList<Shipment>> shipments;
     private ArrayList<Integer> path;
     private int position;
-    private Controler controller;
     private Map map;
     private int time;
+    private CarState state;
 
     public Car(int c) {
         super();
+        id = counter++;
         time = 0;
         capacity = c;
         numberOfShipments = 0;
         shipments = new HashMap<>();
         path = new ArrayList<>();
+        state = new CarState();
     }
 
-    public void addObserver(Controler o) {
-        controller = o;
+    private Car getInstanceOfThis() {
+        return this;
+    }
+
+    public class CarState extends Observable {
+
+        public CarRecentState state;
+
+        private CarState() {
+            state = CarRecentState.Stopped;
+        }
+
+        public Car getCar() {
+            return getInstanceOfThis();
+        }
+
+        private void change(CarRecentState newState, Object obj) {
+            state = newState;
+            setChanged();
+            switch (newState) {
+                case AddedShipment:
+                    notifyObservers(obj);
+                    break;
+                case RemovedShipment:
+                    notifyObservers(obj);
+                    break;
+                default:
+                    notifyObservers();
+                    break;
+            }
+        }
+
+    }
+
+    public enum CarRecentState {
+
+        Stopped, AddedShipment, StartedDelivery, ReachedDestination, RemovedShipment,
+        FinishedTrace
+    }
+
+    public void addObserver(Observer o) {
+        state.addObserver(o);
     }
 
     public void addMap(Map m) {
         map = m;
+        position = m.getBase();
     }
 
     @Override
     public void run() {
-        controller.startCall(this);
+        state.change(CarRecentState.StartedDelivery, null);
         int actualDestiny;
         int delay;
 
@@ -58,23 +102,30 @@ public class Car extends Thread {
             actualDestiny = nextPosition();
             delay = map.getConnection(position, actualDestiny);
             try {
-                Thread.sleep(delay);
+                Thread.sleep(delay * 1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(-3);
             }
             position = actualDestiny;
-            controller.callReachedDestination(this);
+            state.change(CarRecentState.ReachedDestination, null);
             ArrayList<Shipment> tmp = removeShipment(position);
             if (tmp != null && !tmp.isEmpty()) {
                 for (Shipment e : tmp) {
-                    controller.callRemovedShipment(this, e);
+                    state.change(CarRecentState.RemovedShipment, e);
                 }
             }
         }
+        state.change(CarRecentState.FinishedTrace, null);
+        try {
+            Thread.sleep(time * 100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(-3);
+        }
         time = 0;
         position = map.getBase();
-        controller.callFinishedTrace(this);
+        state.change(CarRecentState.Stopped, null);
     }
 
     public int position() {
@@ -99,7 +150,7 @@ public class Car extends Thread {
             shipments.put(s.whereTo(), tmp);
             numberOfShipments++;
         }
-        controller.callAddedShipment(this, s);
+        state.change(CarRecentState.AddedShipment, s);
         if (numberOfShipments == capacity) {
             this.start();
         }

@@ -21,30 +21,30 @@ import shippingSystem.shipments.ShipmentsList;
 public class Input {
 
     private File mapFile;
-    private File shipmentsList;
+    private File shipmentsListFile;
     private int carsNumber;
     private int base = - 1;
     private int capacity;
     private Map processedMap;
     private ShipmentsList ordersList;
 
-    public Input(String map, String list, String cars, String capacity) throws IllegalArgumentException {
-        mapFile = new File(map);
-        shipmentsList = new File(list);
-        this.processedMap = null;
-        this.ordersList = null;
-        try {
-            carsNumber = Integer.parseInt(cars);
-            this.capacity = Integer.parseInt(capacity);
-        } catch (NumberFormatException x) {
-            throw new IllegalArgumentException();
-        }
+    public Input() {
+        mapFile = null;
+        shipmentsListFile = null;
+        processedMap = null;
+        ordersList = null;
+        carsNumber = 0;
+        capacity = 0;
     }
 
+    public void setShipmentListFile(File file) {
+        shipmentsListFile = file;
+    }
+    
     public ShipmentsList returnShipmentsList() throws FileNotFoundException, IncorrectFileFormatException {
         processedMap = returnMap();
-        if (ordersList == null) {
-            Scanner reader = new Scanner(shipmentsList);
+        if (processedMap != null && ordersList == null && shipmentsListFile != null) {
+            Scanner reader = new Scanner(shipmentsListFile);
             ordersList = new ShipmentsList();
             String[] splited;
             if (reader.hasNext()) {
@@ -93,8 +93,12 @@ public class Input {
         return base;
     }
 
+    public void setMapFile(File file) {
+        mapFile = file;
+    }
+    
     public Map returnMap() throws FileNotFoundException {
-        if (processedMap == null) {
+        if (processedMap == null && mapFile != null) {
             Scanner reader = new Scanner(mapFile);
             processedMap = new Map();
             String buffer;
@@ -130,11 +134,19 @@ public class Input {
 
         return result;
     }
+    
+    public void setCarsNumber(int number) {
+        carsNumber = number;
+    }
 
     public int returnCarsNumber() {
         return carsNumber;
     }
 
+    public void setCarsCapacity(int number) {
+        capacity = number;
+    }
+    
     public int returnCarsCapacity() {
         return capacity;
     }

@@ -25,6 +25,9 @@ public class Map extends SparseMultigraph<City, Integer> {
         cities = new ArrayList<>(Arrays.asList(c));
         connections = new Matrix<>(cities.size(), cities.size());
         initDiag();
+        for (City a : c) {
+            addVertex(a);
+        }
     }
 
     public Map() {
@@ -52,9 +55,9 @@ public class Map extends SparseMultigraph<City, Integer> {
         City j = getCityById(b);
         if (i != null && j != null) {
             connections.set(cities.indexOf(i), cities.indexOf(j), value);
-            addEdge(value, i, j);
+//            addEdge(value, i, j);
             connections.set(cities.indexOf(j), cities.indexOf(i), value);
-            addEdge(value, j, i);
+       //     addEdge(value, j, i);
         } else {
             System.err.println("Nie znaleziono połączenia między miastem nr " + a
                     + " a miastem nr " + b);
