@@ -124,7 +124,7 @@ public class MainFrame extends JFrame {
         rightPanel = new JPanel();
         rightPanel.setLayout(new FlowLayout());
 
-        comunicates = new JTextArea();
+        comunicates = new JTextArea(" ", 20, 30);
         comunicates.setVisible(true);
         rightPanel.add(comunicates);
 
