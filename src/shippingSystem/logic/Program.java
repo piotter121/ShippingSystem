@@ -31,6 +31,7 @@ public class Program {
     private ShipmentsList ordersQueue;
     private Car[] cars;
     private int carsNumber;
+
     public Input systemInput;
 
     public Program() {
@@ -38,14 +39,22 @@ public class Program {
         systemInput = new Input();
     }
 
+    public void setObservers(Observer... obs) {
+        for (Observer o : obs) {
+            for (Car c : cars) {
+                c.addObserver(o);
+            }
+        }
+    }
+
     public Map getMap() {
         return mainMap;
     }
-    
+
     public ShipmentsList getShipmentsList() {
         return ordersQueue;
     }
-    
+
     public void initiateSystem() throws UnsignedInputFiles {
         try {
             mainMap = systemInput.returnMap();
@@ -63,10 +72,8 @@ public class Program {
         planner = new Planner(mainMap);
         carsNumber = systemInput.returnCarsNumber();
         cars = new Car[carsNumber];
-        Observer o = new StdOutNotyfier();
         for (int i = 0; i < carsNumber; i++) {
             cars[i] = new Car(systemInput.returnCarsCapacity());
-            cars[i].addObserver(o);
             cars[i].addMap(mainMap);
         }
         mainMap.setBase(systemInput.returnBase());
@@ -95,7 +102,7 @@ public class Program {
             }
         }
     }
-    
+
     public static void main(String[] args) {
         if (args.length < 4) {
             System.err.println("Zbyt mało argumentów wejściowych");
