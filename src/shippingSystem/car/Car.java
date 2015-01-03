@@ -118,7 +118,7 @@ public class Car extends Thread {
         }
         state.change(CarRecentState.FinishedTrace, null);
         try {
-            Thread.sleep(time * 100);
+            Thread.sleep(time);
         } catch (InterruptedException ex) {
             Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(-3);

@@ -19,33 +19,26 @@ import shippingSystem.shipments.Shipment;
 public class StdOutNotyfier implements Observer {
 
     private PrintStream outStr;
-    private long startTime;
-    double time;
 
     public StdOutNotyfier() {
         super();
-        startTime = 0;
-        time = 0.0;
         outStr = System.out;
     }
 
     public synchronized void startCall(Car c) {
-        startTime = System.nanoTime();
         outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("wyruszył z bazy " + c.positionCity() + "\n");
     }
 
     public synchronized void callRemovedShipment(Car c, Shipment s) {
-        outStr.print(time + " ");
-        outStr.print(": Samochód nr " + c.getCarId() + " ");
+        outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("dostarczył przesyłkę: " + s.getName());
         outStr.print(" do miasta: " + c.positionCity());
         outStr.print(" w czasie " + c.getTime() + "\n");
     }
 
     public synchronized void callReachedDestination(Car c) {
-        outStr.print(time + " ");
-        outStr.print(": Samochód nr " + c.getCarId() + " ");
+        outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("dotarł do miasta: " + c.positionCity() + "\n");
     }
 
@@ -55,14 +48,12 @@ public class StdOutNotyfier implements Observer {
     }
 
     public synchronized void callFinishedTrace(Car c) {
-        outStr.print(time + " ");
-        outStr.print(": Samochód nr " + c.getCarId() + " ");
+        outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("dotarł do miasta: " + c.positionCity() + "\n");
     }
 
     public synchronized void callStopped(Car c) {
-        outStr.print(time + " ");
-        outStr.print(": Samochód nr " + c.getCarId() + " ");
+        outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("znajduje się w bazie: " + c.positionCity() + "\n");
     }
 
@@ -70,7 +61,6 @@ public class StdOutNotyfier implements Observer {
     public void update(Observable o, Object arg) {
         CarState state;
         state = (CarState) o;
-        time = (System.nanoTime() - startTime) / 1000;
         switch (state.state) {
             case Stopped:
                 callStopped(state.getCar());

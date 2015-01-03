@@ -54,6 +54,7 @@ public class Input {
                         int tmp = Integer.parseInt(splited[0]);
                         if (processedMap.getCityById(tmp) != null) {
                             base = tmp;
+                            processedMap.setBase(tmp);
                         } else {
                             throw new CityNotFoundException();
                         }

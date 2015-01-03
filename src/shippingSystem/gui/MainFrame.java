@@ -30,7 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
-import shippingSystem.exceptions.UnsignedInputFiles;
+import shippingSystem.exceptions.IncorrectInputArguments;
 import shippingSystem.logic.Program;
 import shippingSystem.map.City;
 import shippingSystem.map.Map;
@@ -43,7 +43,8 @@ public class MainFrame extends JFrame {
 
     private BasicVisualizationServer<City, Integer> vv;
     private Program system;
-    private JPanel rightPanel;
+    private ComPanel rightPanel;
+    private InputArgumentsPanel argumentPanel;
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -56,9 +57,9 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         super();
-        
+
         system = new Program();
-        
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 650);
         setLayout(new FlowLayout());
@@ -69,6 +70,7 @@ public class MainFrame extends JFrame {
         initUpMenu();
         leftPanel();
         rightPanel = new ComPanel();
+        argumentPanel = new InputArgumentsPanel();
 
         startButton = new JButton("Start");
         startButton.addActionListener((ActionEvent e) -> {
@@ -79,7 +81,7 @@ public class MainFrame extends JFrame {
         setJMenuBar(menuBar);
         add(vv);
         add(rightPanel);
-
+        add(argumentPanel);
     }
 
     private void initUpMenu() {
@@ -87,32 +89,25 @@ public class MainFrame extends JFrame {
 
         fileMenu = new JMenu("Menu");
         openMapFileMenuItem = new JMenuItem("Otwórz plik z mapą");
-        openMapFileMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    File opened = fileChooser.getSelectedFile();
-                    system.systemInput.setMapFile(opened);
-                }
+        openMapFileMenuItem.addActionListener((ActionEvent e) -> {
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File opened = fileChooser.getSelectedFile();
+                system.systemInput.setMapFile(opened);
+                argumentPanel.setMapFileInfo(opened.getPath());
             }
         });
         openListFileMenuItem = new JMenuItem("Otwórz plik z listą zleceń");
-        openListFileMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    File opened = fileChooser.getSelectedFile();
-                    system.systemInput.setShipmentListFile(opened);
-                }
+        openListFileMenuItem.addActionListener((ActionEvent e) -> {
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File opened = fileChooser.getSelectedFile();
+                system.systemInput.setShipmentListFile(opened);
+                argumentPanel.setShipmentsFileInfo(opened.getPath());
             }
         });
         exitMenuItem = new JMenuItem("Wyjście");
         exitMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl X"));
-        exitMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
+        exitMenuItem.addActionListener((ActionEvent e) -> {
+            dispose();
         });
 
         menuBar.add(fileMenu);
@@ -133,14 +128,21 @@ public class MainFrame extends JFrame {
     }
 
     private void startProgram() {
+        system.systemInput.setCarsNumber(argumentPanel.getCarsNumber());
+        system.systemInput.setCarsCapacity(argumentPanel.getCarsCapacity());
         try {
             system.initiateSystem();
-        } catch (UnsignedInputFiles ex) {
-            JOptionPane.showMessageDialog(this, "Nie zainicjalizowano systemu", "Błąd", JOptionPane.ERROR_MESSAGE);
+        } catch (IncorrectInputArguments ex) {
+            JOptionPane.showMessageDialog(this, "Nie zainicjalizowano systemu",
+                    "Błąd", JOptionPane.ERROR_MESSAGE);
             return;
         }
         system.setObservers((Observer) rightPanel);
-        system.startSystem();
+        Runnable thread;
+        thread = () -> {
+            system.startSystem();
+        };
+        thread.run();
     }
 
 }

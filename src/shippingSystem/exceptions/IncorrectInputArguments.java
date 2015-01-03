@@ -9,6 +9,6 @@ package shippingSystem.exceptions;
  *
  * @author Piotrek
  */
-public class UnsignedInputFiles extends Exception {
+public class IncorrectInputArguments extends Exception {
     
 }

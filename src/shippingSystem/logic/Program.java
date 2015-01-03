@@ -6,7 +6,6 @@
 package shippingSystem.logic;
 
 import java.io.File;
-import shippingSystem.inputOutput.StdOutNotyfier;
 import shippingSystem.car.Car;
 import shippingSystem.exceptions.IncorrectFileFormatException;
 import shippingSystem.inputOutput.Input;
@@ -15,7 +14,8 @@ import java.util.ArrayList;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import shippingSystem.exceptions.UnsignedInputFiles;
+import shippingSystem.exceptions.IncorrectInputArguments;
+import shippingSystem.inputOutput.StdOutNotyfier;
 import shippingSystem.map.Map;
 import shippingSystem.shipments.ShipmentsList;
 
@@ -55,9 +55,10 @@ public class Program {
         return ordersQueue;
     }
 
-    public void initiateSystem() throws UnsignedInputFiles {
+    public void initiateSystem() throws IncorrectInputArguments {
         try {
             mainMap = systemInput.returnMap();
+            mainMap.setBase(systemInput.returnBase());
             ordersQueue = systemInput.returnShipmentsList();
         } catch (FileNotFoundException ex) {
             System.err.println("Nie znaleziono pliku zawierającego mapę");
@@ -66,17 +67,17 @@ public class Program {
             System.err.println("Nie prawidłowy format jednego z plików wejściowych");
             System.exit(-1);
         }
-        if (mainMap == null || ordersQueue == null) {
-            throw new UnsignedInputFiles();
+        carsNumber = systemInput.returnCarsNumber();
+        int capacity = systemInput.returnCarsCapacity();
+        if (mainMap == null || ordersQueue == null || carsNumber < 1 || capacity < 1) {
+            throw new IncorrectInputArguments();
         }
         planner = new Planner(mainMap);
-        carsNumber = systemInput.returnCarsNumber();
         cars = new Car[carsNumber];
         for (int i = 0; i < carsNumber; i++) {
-            cars[i] = new Car(systemInput.returnCarsCapacity());
+            cars[i] = new Car(capacity);
             cars[i].addMap(mainMap);
         }
-        mainMap.setBase(systemInput.returnBase());
     }
 
     public void startSystem() {
@@ -115,9 +116,10 @@ public class Program {
         p.systemInput.setCarsCapacity(Integer.parseInt(args[3]));
         try {
             p.initiateSystem();
-        } catch (UnsignedInputFiles ex) {
+        } catch (IncorrectInputArguments ex) {
             System.err.println("Nie wczytano argumentów wejściowych");
         }
+        p.setObservers(new StdOutNotyfier());
         p.startSystem();
     }
 }
