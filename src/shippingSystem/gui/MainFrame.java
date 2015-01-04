@@ -112,19 +112,25 @@ public class MainFrame extends JFrame {
     }
 
     private void startProgram() {
+        JFrame i = this;
         if (!system.isRunning) {
-            system.systemInput.setCarsNumber(argumentPanel.getCarsNumber());
-            system.systemInput.setCarsCapacity(argumentPanel.getCarsCapacity());
-            try {
-                system.initiateSystem();
-            } catch (IncorrectInputArguments ex) {
-                JOptionPane.showMessageDialog(this, "Nie zainicjalizowano systemu",
-                        "Błąd", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            system.setObservers((Observer) rightPanel, (Observer) graph);
-            graph.setGraph(system.getMap());
-            system.startSystem();
+            new Runnable() {
+                @Override
+                public void run() {
+                    system.systemInput.setCarsNumber(argumentPanel.getCarsNumber());
+                    system.systemInput.setCarsCapacity(argumentPanel.getCarsCapacity());
+                    try {
+                        system.initiateSystem();
+                    } catch (IncorrectInputArguments ex) {
+                        JOptionPane.showMessageDialog(i, "Nie zainicjalizowano systemu",
+                                "Błąd", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    system.setObservers((Observer) rightPanel, (Observer) graph);
+                    graph.setGraph(system.getMap());
+                    system.startSystem();
+                }
+            }.run();
         }
     }
 

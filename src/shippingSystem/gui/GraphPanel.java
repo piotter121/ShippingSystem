@@ -30,10 +30,12 @@ import shippingSystem.map.Map;
  * @author Piotrek
  */
 public class GraphPanel extends JPanel implements Observer {
-
+    
     private BasicVisualizationServer<City, Integer> vv;
-
+    
     public GraphPanel(Graph g) {
+        setSize(new Dimension(500, 400));
+        
         Layout<City, Integer> layout = new CircleLayout(new Map());
         layout.setSize(new Dimension(500, 400));
         vv = new BasicVisualizationServer<>(layout);
@@ -41,22 +43,22 @@ public class GraphPanel extends JPanel implements Observer {
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
         vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.AUTO);
-
+        
         add(vv);
     }
-
+    
     public void setGraph(Graph g) {
         vv.getGraphLayout().setGraph(g);
     }
-
+    
     @Override
-    public void update(Observable o, Object arg) {
+    public synchronized void update(Observable o, Object arg) {
         CarState state;
         state = (CarState) o;
         Car car;
         car = state.getCar();
         City actualCity = car.positionCity();
-
+        
         Transformer<City, Paint> vertexPaint = new Transformer<City, Paint>() {
             @Override
             public Paint transform(City i) {
@@ -68,21 +70,21 @@ public class GraphPanel extends JPanel implements Observer {
             }
         };
         vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
+        
+        float dash[] = {10.0f};
+        final Stroke edgeStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
+        Transformer<Integer, Stroke> edgeStrokeTransformer = new Transformer<Integer, Stroke>() {
+            @Override
+            public Stroke transform(Integer s) {
 
-//        float dash[] = {10.0f};
-//        final Stroke edgeStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
-//                BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
-//        Transformer<Integer, Stroke> edgeStrokeTransformer = new Transformer<Integer, Stroke>() {
-//            @Override
-//            public Stroke transform(Integer s) {
-//
-//                if (s == car.) {
+//                if (s == car) {
 //                    return edgeStroke;
 //                }
-//                return new BasicStroke();
-//            }
-//        };
+                return new BasicStroke();
+            }
+        };
         repaint();
     }
-
+    
 }

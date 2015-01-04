@@ -6,8 +6,7 @@
 package shippingSystem.map;
 
 import dataStructures.Matrix;
-import edu.uci.ics.jung.graph.UndirectedGraph;
-import edu.uci.ics.jung.graph.UndirectedSparseGraph;
+import edu.uci.ics.jung.graph.SparseMultigraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,13 +14,11 @@ import java.util.Arrays;
  *
  * @author Piotrek
  */
-public class Map extends UndirectedSparseGraph<City, Integer> {
+public class Map extends SparseMultigraph<City, Integer> {
 
     private Matrix<Integer> connections;
     private ArrayList<City> cities;
     private int base;
-    
-    private UndirectedGraph map;
 
     public Map(City... c) {
         super();
