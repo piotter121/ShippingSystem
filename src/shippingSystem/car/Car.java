@@ -5,12 +5,14 @@
  */
 package shippingSystem.car;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Observable;
 import java.util.Observer;
+import shippingSystem.gui.Colored;
 import shippingSystem.map.City;
 import shippingSystem.map.Map;
 import shippingSystem.shipments.Shipment;
@@ -19,7 +21,7 @@ import shippingSystem.shipments.Shipment;
  *
  * @author Piotrek
  */
-public class Car extends Thread {
+public class Car extends Thread implements Colored {
 
     private static int counter = 0;
     private final int id;
@@ -45,6 +47,14 @@ public class Car extends Thread {
 
     private Car getInstanceOfThis() {
         return this;
+    }
+
+    @Override
+    public Color getColor() {
+        int R = (int) (Math.random() * 256);
+        int G = (int) (Math.random() * 256);
+        int B = (int) (Math.random() * 256);
+        return new Color(R, G, B);
     }
 
     public class CarState extends Observable {

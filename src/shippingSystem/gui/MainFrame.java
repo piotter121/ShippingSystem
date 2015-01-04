@@ -14,21 +14,15 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import shippingSystem.exceptions.IncorrectInputArguments;
 import shippingSystem.logic.Program;
@@ -41,10 +35,10 @@ import shippingSystem.map.Map;
  */
 public class MainFrame extends JFrame {
 
-    private BasicVisualizationServer<City, Integer> vv;
     private Program system;
     private ComPanel rightPanel;
     private InputArgumentsPanel argumentPanel;
+    private GraphPanel graph;
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -68,9 +62,9 @@ public class MainFrame extends JFrame {
         fileChooser = new JFileChooser();
 
         initUpMenu();
-        leftPanel();
         rightPanel = new ComPanel();
         argumentPanel = new InputArgumentsPanel();
+        graph = new GraphPanel(new Map());
 
         startButton = new JButton("Start");
         startButton.addActionListener((ActionEvent e) -> {
@@ -79,7 +73,7 @@ public class MainFrame extends JFrame {
         rightPanel.add(startButton, BorderLayout.PAGE_END);
 
         setJMenuBar(menuBar);
-        add(vv);
+        add(graph);
         add(rightPanel);
         add(argumentPanel);
     }
@@ -117,16 +111,6 @@ public class MainFrame extends JFrame {
         fileMenu.add(exitMenuItem);
     }
 
-    private void leftPanel() {
-        Layout<City, Integer> layout = new CircleLayout(new Map());
-        layout.setSize(new Dimension(500, 400));
-        vv = new BasicVisualizationServer<>(layout);
-        vv.setPreferredSize(new Dimension(540, 440));
-        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
-        vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
-        vv.getRenderer().getVertexLabelRenderer().setPosition(Position.AUTO);
-    }
-
     private void startProgram() {
         system.systemInput.setCarsNumber(argumentPanel.getCarsNumber());
         system.systemInput.setCarsCapacity(argumentPanel.getCarsCapacity());
@@ -137,7 +121,8 @@ public class MainFrame extends JFrame {
                     "Błąd", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        system.setObservers((Observer) rightPanel);
+        system.setObservers((Observer) rightPanel, (Observer) graph);
+        graph.setGraph(system.getMap());
         Runnable thread;
         thread = () -> {
             system.startSystem();

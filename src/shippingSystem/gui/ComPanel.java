@@ -66,23 +66,24 @@ public class ComPanel extends JPanel implements Observer {
     }
 
     private synchronized void callStopped(Car car) {
-        communicatesArea.append("Samochód nr " + car.getCarId() + " ");
-        communicatesArea.append("znajduje się w bazie: " + car.positionCity() + "\n");
+        communicatesArea.append("Samochód nr " + car.getCarId() + " "
+                + "znajduje się w bazie: " + car.positionCity() + "\n");
     }
 
     private synchronized void callAddedShipment(Car car, Shipment shipment) {
-        communicatesArea.append("Samochód nr " + car.getCarId() + " ");
-        communicatesArea.append("przyjął przesyłkę: " + shipment.getName() + "\n");
+        communicatesArea.append("Samochód nr " + car.getCarId() + " "
+                + "przyjął przesyłkę: " + shipment.getName() + "\n");
     }
 
     private synchronized void startCall(Car car) {
-        communicatesArea.append("Samochód nr " + car.getCarId() + " ");
-        communicatesArea.append("wyruszył z bazy " + car.positionCity() + "\n");
+        communicatesArea.append("Samochód nr " + car.getCarId() + " "
+                + "wyruszył z bazy " + car.positionCity() + "\n");
     }
 
     private synchronized void callReachedDestination(Car car) {
-        communicatesArea.append("Samochód nr " + car.getCarId() + " ");
-        communicatesArea.append("dotarł do miasta: " + car.positionCity() + "\n");
+        communicatesArea.append("Samochód nr " + car.getCarId() + " "
+                + "dotarł do miasta: " + car.positionCity()
+                + " w czasie " + car.getTime() + "\n");
     }
 
     private synchronized void callRemovedShipment(Car car, Shipment shipment) {
@@ -94,7 +95,8 @@ public class ComPanel extends JPanel implements Observer {
 
     private synchronized void callFinishedTrace(Car car) {
         communicatesArea.append("Samochód nr " + car.getCarId() + " "
-                + "dotarł do miasta: " + car.positionCity() + "\n");
+                + "dotarł do miasta: " + car.positionCity() 
+                + " w czasie "+ car.getTime() + "\n");
     }
 
 }

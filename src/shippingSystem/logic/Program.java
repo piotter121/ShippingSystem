@@ -31,10 +31,13 @@ public class Program {
     private ShipmentsList ordersQueue;
     private Car[] cars;
     private int carsNumber;
+    
+    public boolean isRunning;
 
     public Input systemInput;
 
     public Program() {
+        this.isRunning = false;
         obs = new ArrayList<>();
         systemInput = new Input();
     }
@@ -81,6 +84,7 @@ public class Program {
     }
 
     public void startSystem() {
+        isRunning = true;
         planner.calculatePaths();
         while (!ordersQueue.isEmpty()) {
             planner.pickShipmentsToCars(cars, ordersQueue);
@@ -94,6 +98,7 @@ public class Program {
                 }
             }
         }
+        isRunning = false;
     }
 
     private synchronized void startRestOfCars() {
