@@ -14,6 +14,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Observer;
 import javax.swing.JButton;
@@ -67,8 +68,19 @@ public class MainFrame extends JFrame {
         graph = new GraphPanel(new Map());
 
         startButton = new JButton("Start");
-        startButton.addActionListener((ActionEvent e) -> {
-            startProgram();
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!system.isRunning) {
+                    Thread main = new Thread("Main") {
+                        @Override
+                        public void run() {
+                            startProgram();
+                        }
+                    };
+                    main.start();
+                }
+            }
         });
         rightPanel.add(startButton, BorderLayout.PAGE_END);
 
@@ -112,26 +124,19 @@ public class MainFrame extends JFrame {
     }
 
     private void startProgram() {
-        JFrame i = this;
-        if (!system.isRunning) {
-            new Runnable() {
-                @Override
-                public void run() {
-                    system.systemInput.setCarsNumber(argumentPanel.getCarsNumber());
-                    system.systemInput.setCarsCapacity(argumentPanel.getCarsCapacity());
-                    try {
-                        system.initiateSystem();
-                    } catch (IncorrectInputArguments ex) {
-                        JOptionPane.showMessageDialog(i, "Nie zainicjalizowano systemu",
-                                "Błąd", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    system.setObservers((Observer) rightPanel, (Observer) graph);
-                    graph.setGraph(system.getMap());
-                    system.startSystem();
-                }
-            }.run();
+        system.systemInput.setCarsNumber(argumentPanel.getCarsNumber());
+        system.systemInput.setCarsCapacity(argumentPanel.getCarsCapacity());
+        try {
+            system.initiateSystem();
+        } catch (IncorrectInputArguments ex) {
+            JOptionPane.showMessageDialog(this, "Nie zainicjalizowano systemu",
+                    "Błąd", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        system.setObservers((Observer) rightPanel);
+        graph.setGraph(system.getMap());
+        system.startSystem();
+
     }
 
 }

@@ -34,7 +34,6 @@ public class ComPanel extends JPanel implements Observer {
 
         communicatesArea = new JTextArea(new String(), 20, 30);
         scroll = new JScrollPane(communicatesArea);
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         add(scroll, BorderLayout.CENTER);
     }
 
@@ -63,6 +62,7 @@ public class ComPanel extends JPanel implements Observer {
                 callFinishedTrace(state.getCar());
                 break;
         }
+        repaint();
     }
 
     private synchronized void callStopped(Car car) {
