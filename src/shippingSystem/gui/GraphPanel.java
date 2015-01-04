@@ -11,9 +11,11 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
+import java.awt.Stroke;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
@@ -53,16 +55,34 @@ public class GraphPanel extends JPanel implements Observer {
         state = (CarState) o;
         Car car;
         car = state.getCar();
+        City actualCity = car.positionCity();
 
         Transformer<City, Paint> vertexPaint = new Transformer<City, Paint>() {
             @Override
             public Paint transform(City i) {
                 if (i.equals(car.positionCity())) {
                     return car.getColor();
+                } else {
+                    return Color.RED;
                 }
-                return Color.RED;
             }
         };
+        vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
+
+//        float dash[] = {10.0f};
+//        final Stroke edgeStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+//                BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
+//        Transformer<Integer, Stroke> edgeStrokeTransformer = new Transformer<Integer, Stroke>() {
+//            @Override
+//            public Stroke transform(Integer s) {
+//
+//                if (s == car.) {
+//                    return edgeStroke;
+//                }
+//                return new BasicStroke();
+//            }
+//        };
+        repaint();
     }
 
 }

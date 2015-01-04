@@ -31,7 +31,7 @@ public class Program {
     private ShipmentsList ordersQueue;
     private Car[] cars;
     private int carsNumber;
-    
+
     public boolean isRunning;
 
     public Input systemInput;
@@ -78,7 +78,7 @@ public class Program {
         planner = new Planner(mainMap);
         cars = new Car[carsNumber];
         for (int i = 0; i < carsNumber; i++) {
-            cars[i] = new Car(capacity);
+            cars[i] = new Car(i, capacity);
             cars[i].addMap(mainMap);
         }
     }
@@ -89,12 +89,11 @@ public class Program {
         while (!ordersQueue.isEmpty()) {
             planner.pickShipmentsToCars(cars, ordersQueue);
             startRestOfCars();
-            for (Car e : cars) {
+            for (int i = 0; i < cars.length; i++) {
                 try {
-                    e.join();
+                    cars[i].join();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Program.class.getName()).log(Level.SEVERE, null, ex);
-                    System.exit(-2);
                 }
             }
         }

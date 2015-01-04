@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.Observable;
 import java.util.Observer;
 import shippingSystem.gui.Colored;
+import shippingSystem.logic.Timer;
 import shippingSystem.map.City;
 import shippingSystem.map.Map;
 import shippingSystem.shipments.Shipment;
@@ -23,7 +24,6 @@ import shippingSystem.shipments.Shipment;
  */
 public class Car extends Thread implements Colored {
 
-    private static int counter = 0;
     private final int id;
     private final int capacity;
     private int numberOfShipments;
@@ -33,16 +33,23 @@ public class Car extends Thread implements Colored {
     private Map map;
     private int time;
     private CarState state;
+    private Color color;
+    private boolean isRunning;
 
-    public Car(int c) {
+    public Car(int id, int c) {
         super();
-        id = counter++;
+        this.id = id;
         time = 0;
         capacity = c;
         numberOfShipments = 0;
         shipments = new HashMap<>();
         path = new ArrayList<>();
         state = new CarState();
+        int R = (int) (Math.random() * 256);
+        int G = (int) (Math.random() * 256);
+        int B = (int) (Math.random() * 256);
+        color = new Color(R, G, B);
+        isRunning = false;
     }
 
     private Car getInstanceOfThis() {
@@ -51,10 +58,45 @@ public class Car extends Thread implements Colored {
 
     @Override
     public Color getColor() {
-        int R = (int) (Math.random() * 256);
-        int G = (int) (Math.random() * 256);
-        int B = (int) (Math.random() * 256);
-        return new Color(R, G, B);
+        return color;
+    }
+
+    @Override
+    public void run() {
+        isRunning = true;
+        state.change(CarRecentState.StartedDelivery, null);
+        int actualDestiny;
+        int delay;
+
+        while (!path.isEmpty()) {
+            actualDestiny = nextPosition();
+            delay = map.getConnection(position, actualDestiny);
+            try {
+                Thread.sleep(delay * Timer.delay);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
+                System.exit(-3);
+            }
+            position = actualDestiny;
+            state.change(CarRecentState.ReachedDestination, null);
+            ArrayList<Shipment> tmp = removeShipment(position);
+            if (tmp != null && !tmp.isEmpty()) {
+                tmp.stream().forEach((e) -> {
+                    state.change(CarRecentState.RemovedShipment, e);
+                });
+            }
+        }
+        state.change(CarRecentState.FinishedTrace, null);
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(-3);
+        }
+        time = 0;
+        position = map.getBase();
+        state.change(CarRecentState.Stopped, null);
+        isRunning = false;
     }
 
     public class CarState extends Observable {
@@ -100,42 +142,6 @@ public class Car extends Thread implements Colored {
     public void addMap(Map m) {
         map = m;
         position = m.getBase();
-    }
-
-    @Override
-    public void run() {
-        state.change(CarRecentState.StartedDelivery, null);
-        int actualDestiny;
-        int delay;
-
-        while (!path.isEmpty()) {
-            actualDestiny = nextPosition();
-            delay = map.getConnection(position, actualDestiny);
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
-                System.exit(-3);
-            }
-            position = actualDestiny;
-            state.change(CarRecentState.ReachedDestination, null);
-            ArrayList<Shipment> tmp = removeShipment(position);
-            if (tmp != null && !tmp.isEmpty()) {
-                for (Shipment e : tmp) {
-                    state.change(CarRecentState.RemovedShipment, e);
-                }
-            }
-        }
-        state.change(CarRecentState.FinishedTrace, null);
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Car.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(-3);
-        }
-        time = 0;
-        position = map.getBase();
-        state.change(CarRecentState.Stopped, null);
     }
 
     public int position() {

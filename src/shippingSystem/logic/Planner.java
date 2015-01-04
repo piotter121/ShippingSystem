@@ -104,7 +104,7 @@ public class Planner {
         return isAnyEmpty;
     }
 
-    private boolean checkCarsIfAvailable(Car[] cars) {
+    public boolean checkCarsIfAvailable(Car[] cars) {
         boolean ifAnyAvailable = false;
         for (Car e : cars) {
             if (e.isAvailable()) {

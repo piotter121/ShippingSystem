@@ -10,5 +10,9 @@ package shippingSystem.logic;
  * @author Piotrek
  */
 public class Timer {
-    private long delay;
+    public static int delay = 0;
+    
+    public static void setDelay(int i) {
+        delay = i;
+    }
 }
