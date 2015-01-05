@@ -25,40 +25,40 @@ public class StdOutNotyfier implements Observer {
         outStr = System.out;
     }
 
-    public synchronized void startCall(Car c) {
+    private synchronized void startCall(Car c) {
         outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("wyruszył z bazy " + c.positionCity() + "\n");
     }
 
-    public synchronized void callRemovedShipment(Car c, Shipment s) {
+    private synchronized void callRemovedShipment(Car c, Shipment s) {
         outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("dostarczył przesyłkę: " + s.getName());
         outStr.print(" do miasta: " + c.positionCity());
         outStr.print(" w czasie " + c.getTime() + "\n");
     }
 
-    public synchronized void callReachedDestination(Car c) {
+    private synchronized void callReachedDestination(Car c) {
         outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("dotarł do miasta: " + c.positionCity() + "\n");
     }
 
-    public synchronized void callAddedShipment(Car c, Shipment s) {
+    private synchronized void callAddedShipment(Car c, Shipment s) {
         outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("przyjął przesyłkę: " + s.getName() + "\n");
     }
 
-    public synchronized void callFinishedTrace(Car c) {
+    private synchronized void callFinishedTrace(Car c) {
         outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("dotarł do miasta: " + c.positionCity() + "\n");
     }
 
-    public synchronized void callStopped(Car c) {
+    private synchronized void callStopped(Car c) {
         outStr.print("Samochód nr " + c.getCarId() + " ");
         outStr.print("znajduje się w bazie: " + c.positionCity() + "\n");
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public synchronized void update(Observable o, Object arg) {
         CarState state;
         state = (CarState) o;
         switch (state.state) {

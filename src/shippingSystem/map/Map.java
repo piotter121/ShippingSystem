@@ -5,7 +5,6 @@
  */
 package shippingSystem.map;
 
-import dataStructures.Matrix;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,15 +15,15 @@ import java.util.Arrays;
  */
 public class Map extends SparseMultigraph<City, Integer> {
 
-    private Matrix<Integer> connections;
+//    private Matrix<Integer> connections;
     private ArrayList<City> cities;
     private int base;
 
     public Map(City... c) {
         super();
         cities = new ArrayList<>(Arrays.asList(c));
-        connections = new Matrix<>(cities.size(), cities.size());
-        initDiag();
+//        connections = new Matrix<>(cities.size(), cities.size());
+//        initDiag();
         for (City a : c) {
             addVertex(a);
         }
@@ -33,7 +32,7 @@ public class Map extends SparseMultigraph<City, Integer> {
 
     public Map() {
         super();
-        connections = new Matrix<>(0, 0);
+//        connections = new Matrix<>(0, 0);
         cities = new ArrayList<>();
     }
 
@@ -45,18 +44,18 @@ public class Map extends SparseMultigraph<City, Integer> {
         return base;
     }
 
-    private void initDiag() {
-        for (int i = 0; i < cities.size(); i++) {
-            setConnection(cities.get(i).getId(), cities.get(i).getId(), new Integer(0));
-        }
-    }
+//    private void initDiag() {
+//        for (int i = 0; i < cities.size(); i++) {
+//            setConnection(cities.get(i).getId(), cities.get(i).getId(), new Integer(0));
+//        }
+//    }
 
     public void setConnection(int a, int b, int value) {
         City i = getCityById(a);
         City j = getCityById(b);
         if (i != null && j != null) {
-            connections.set(cities.indexOf(i), cities.indexOf(j), value);
-            connections.set(cities.indexOf(j), cities.indexOf(i), value);
+//            connections.set(cities.indexOf(i), cities.indexOf(j), value);
+//            connections.set(cities.indexOf(j), cities.indexOf(i), value);
             if (i != j) {
                 addEdge(value, i, j);
             }
@@ -79,7 +78,7 @@ public class Map extends SparseMultigraph<City, Integer> {
         City i = getCityById(a);
         City j = getCityById(b);
         if (i != null && j != null) {
-            Integer o = connections.get(cities.indexOf(i), cities.indexOf(j));
+            Integer o = findEdge(i, j);
             if (o == null) {
                 return -1;
             } else {
@@ -93,14 +92,14 @@ public class Map extends SparseMultigraph<City, Integer> {
 
     public void addCity(City c) {
         cities.add(c);
-        Matrix<Integer> newConnections = new Matrix<>(cities.size(), cities.size());
-        for (int i = 0; i < newConnections.getRows() - 1; i++) {
-            for (int j = 0; j < newConnections.getCols() - 1; j++) {
-                newConnections.set(i, j, connections.get(i, j));
-            }
-        }
-        connections = newConnections;
-        initDiag();
+//        Matrix<Integer> newConnections = new Matrix<>(cities.size(), cities.size());
+//        for (int i = 0; i < newConnections.getRows() - 1; i++) {
+//            for (int j = 0; j < newConnections.getCols() - 1; j++) {
+//                newConnections.set(i, j, connections.get(i, j));
+//            }
+//        }
+//        connections = newConnections;
+//        initDiag();
         addVertex(c);
     }
 
@@ -111,7 +110,7 @@ public class Map extends SparseMultigraph<City, Integer> {
             result += a.toString() + "\n";
         }
 
-        result += connections.toString();
+//        result += connections.toString();
 
         return result;
     }
