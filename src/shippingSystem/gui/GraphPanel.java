@@ -43,7 +43,7 @@ public class GraphPanel extends JPanel implements Observer {
         vv.setPreferredSize(new Dimension(540, 440));
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
         vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
-        vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.AUTO);
+        vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 
         add(vv);
         vv.repaint();
