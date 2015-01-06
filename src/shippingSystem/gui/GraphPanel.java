@@ -14,6 +14,7 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Paint;
 import java.awt.Stroke;
 import java.util.Observable;
@@ -33,23 +34,27 @@ import shippingSystem.map.Map;
 public class GraphPanel extends JPanel implements Observer {
 
     private BasicVisualizationServer<City, Integer> vv;
+    private Graph g;
 
     public GraphPanel(Graph g) {
+        this.g = g;
+        setLayout(new FlowLayout());
         setSize(new Dimension(500, 400));
 
-        Layout<City, Integer> layout = new CircleLayout(new Map());
+        Layout<City, Integer> layout = new CircleLayout(g);
         layout.setSize(new Dimension(500, 400));
         vv = new BasicVisualizationServer<>(layout);
         vv.setPreferredSize(new Dimension(540, 440));
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
         vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
-        vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+        vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.SE);
 
         add(vv);
         vv.repaint();
     }
 
     public void setGraph(Graph g) {
+        this.g = g;
         vv.getGraphLayout().setGraph(g);
         vv.repaint();
     }
@@ -63,7 +68,7 @@ public class GraphPanel extends JPanel implements Observer {
 
         switch (state.state) {
             case ReachedDestination:
-                updateCarOnMap(car);
+                pickVeretex(car.positionCity());
                 break;
         }
 
@@ -73,7 +78,6 @@ public class GraphPanel extends JPanel implements Observer {
 //        Transformer<Integer, Stroke> edgeStrokeTransformer = new Transformer<Integer, Stroke>() {
 //            @Override
 //            public Stroke transform(Integer s) {
-//
 //                if (s == car) {
 //                    return edgeStroke;
 //                }
@@ -97,4 +101,8 @@ public class GraphPanel extends JPanel implements Observer {
         vv.repaint();
     }
 
+    private void pickVeretex(City c) {
+        vv.getRenderContext().getPickedVertexState().pick(c, true);
+        vv.repaint();
+    }
 }

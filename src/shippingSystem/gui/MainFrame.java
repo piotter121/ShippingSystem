@@ -16,7 +16,10 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -95,25 +98,42 @@ public class MainFrame extends JFrame {
 
         fileMenu = new JMenu("Menu");
         openMapFileMenuItem = new JMenuItem("Otwórz plik z mapą");
-        openMapFileMenuItem.addActionListener((ActionEvent e) -> {
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File opened = fileChooser.getSelectedFile();
-                system.systemInput.setMapFile(opened);
-                argumentPanel.setMapFileInfo(opened.getPath());
+        openMapFileMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File opened = fileChooser.getSelectedFile();
+                    system.systemInput.setMapFile(opened);
+                    try {
+                        graph.setGraph(system.systemInput.returnMap());
+                    } catch (FileNotFoundException ex) {
+                        JOptionPane.showMessageDialog(null, "Bład pliku z mapą!",
+                                "Błąd", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    argumentPanel.setMapFileInfo(opened.getPath());
+
+                }
             }
         });
         openListFileMenuItem = new JMenuItem("Otwórz plik z listą zleceń");
-        openListFileMenuItem.addActionListener((ActionEvent e) -> {
-            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File opened = fileChooser.getSelectedFile();
-                system.systemInput.setShipmentListFile(opened);
-                argumentPanel.setShipmentsFileInfo(opened.getPath());
+        openListFileMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File opened = fileChooser.getSelectedFile();
+                    system.systemInput.setShipmentListFile(opened);
+                    argumentPanel.setShipmentsFileInfo(opened.getPath());
+                }
             }
         });
         exitMenuItem = new JMenuItem("Wyjście");
         exitMenuItem.setAccelerator(KeyStroke.getKeyStroke("ctrl X"));
-        exitMenuItem.addActionListener((ActionEvent e) -> {
-            dispose();
+        exitMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
         });
 
         menuBar.add(fileMenu);
